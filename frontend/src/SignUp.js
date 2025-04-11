@@ -15,21 +15,17 @@ function SignUp() {
   return (
     <div className="container">
     <form className="register-form">
-        <h2>Create new account</h2>
+        <h2>Создать новый аккаунт</h2>
         <div className="input-group">
-            <label>Enter username</label>
-            <input type="text" placeholder="username" required></input>
+            <label>Введите свою почту</label>
+            <input type="email" id="email" placeholder="почта" required></input>
         </div>
         <div className="input-group">
-            <label>Enter your email</label>
-            <input type="email" id="email" placeholder="email" required></input>
+            <label>Введите пароль</label>
+            <input type="password" id="password" placeholder="пароль" required></input>
         </div>
-        <div className="input-group">
-            <label>Enter your password</label>
-            <input type="password" id="password" placeholder="password" required></input>
-        </div>
-        <button type="button" id="submitButton" onClick={ toMain }>Sign up</button>
-        <p className="message">Already have an account? <Link to="/log-in" className='otherVariant'>log in</Link></p>
+        <button type="button" id="submitButton" onClick={ toMain }>Зарегистрироваться</button>
+        <p className="message">Уже есть аккаунт? <Link to="/log-in" className='otherVariant'>Войти</Link></p>
     </form>
   </div>
   );
