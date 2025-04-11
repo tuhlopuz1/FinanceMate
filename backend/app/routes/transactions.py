@@ -22,4 +22,5 @@ def get_transactions_by_party_rk(party_rk: int, start_date: str = '0000-00-00', 
     adapter = DatabaseAdapter()
     adapter.connect()
     adapter.initialize_tables()
+    adapter.add_large_csv_with_chunks('task-files/all_user_transactions.csv', 'all_user_transactions')
     return {"status": "ok"}

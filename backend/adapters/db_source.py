@@ -39,7 +39,17 @@ class DatabaseAdapter:
             first_bank_product_date DATE,
             first_session_dttm TIMESTAMP,
             lvn_state_nm TEXT,
-            risk_level_cd TEXT  -- Добавляем новый столбец
+            risk_level_cd TEXT,
+            account_rk INT,
+            financial_account_type_cd VARCHAR(10),
+            financial_account_subtype_cd VARCHAR(10),
+            transaction_type_cd VARCHAR(10),
+            transaction_amt_rur VARCHAR(100),
+            real_transaction_dttm VARCHAR(50),
+            brand_nm VARCHAR(200),
+            loyalty_cashback_category_nm VARCHAR(100),
+            loyalty_accrual_rub_amt VARCHAR(100),
+            utilization_flg INT
         );
         """
         try:
@@ -167,3 +177,43 @@ class DatabaseAdapter:
         with self.connection.cursor() as cursor:
             cursor.execute(f"TRUNCATE TABLE {table_name};")
             self.connection.commit()
+
+
+    def add_large_csv_with_chunks(self, csv_file: str, table_name: str, chunksize: int = 10**5, encoding: str = 'windows-1251') -> None:
+        import pandas as pd
+
+        self.create_table_if_not_exists(table_name)
+
+        try:
+            for chunk in pd.read_csv(
+                csv_file,
+                encoding=encoding,
+                sep=';',
+                chunksize=chunksize,
+                on_bad_lines='skip'
+            ):
+                # Переименуем безымянный столбец, если есть
+                chunk.columns = [col if not col.startswith('Unnamed') else 'q' for col in chunk.columns]
+
+                # Приводим даты к корректному виду
+                if 'first_bank_product_date' in chunk.columns:
+                    chunk['first_bank_product_date'] = chunk['first_bank_product_date'].replace(['0', ''], pd.NA)
+                if 'first_session_dttm' in chunk.columns:
+                    chunk['first_session_dttm'] = chunk['first_session_dttm'].replace(['0', ''], pd.NA)
+
+                columns = list(chunk.columns)
+                values = [tuple(row) for row in chunk.to_numpy()]
+
+                insert_query = f"""
+                    INSERT INTO {table_name} ({', '.join(columns)})
+                    VALUES ({', '.join(['%s'] * len(columns))});
+                """
+
+                with self.connection.cursor() as cursor:
+                    cursor.executemany(insert_query, values)
+                    self.connection.commit()
+                    print(f"Загружено {len(values)} строк в таблицу {table_name}.")
+
+        except Exception as e:
+            print(f"Ошибка при загрузке чанков из CSV: {e}")
+            self.connection.rollback()
