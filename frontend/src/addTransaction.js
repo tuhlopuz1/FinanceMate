@@ -63,15 +63,17 @@ export default function AddTransaction() {
           required
         />
 
-        <input type="submit" value="Добавить" className="submit" />
+        <button id="submCSV" className="submit" style={{ marginTop: '5x' }}>
+          Добавить CSV
+        </button>
 
-        <hr style={{ margin: '30px 0', borderColor: '#444' }} />
+        <hr style={{ margin: '20px 0', borderColor: '#444' }} />
 
         <h2>Импорт из CSV</h2>
         <input type="file" accept=".csv" onChange={handleCSVChange} />
         {csvFile && <p>Файл выбран: {csvFile.name}</p>}
 
-        <button onClick={handleCSVSubmit} className="submit" style={{ marginTop: '10px' }}>
+        <button onClick={handleCSVSubmit} id="submCSV" className="submit" style={{ marginTop: '5x' }}>
           Добавить CSV
         </button>
       </form>

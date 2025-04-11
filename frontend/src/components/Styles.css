@@ -164,9 +164,58 @@ body {
     padding: 3%;
   }
   #defBtn{
-    background-color: #222;
+    background-color: #003FC8;
     color: #fff;
     border-radius: 0.5rem;
     height: 5vh;
     border: none;
+}
+#submCSV {
+    height: 5vh;
+    border-radius: 0.5rem;
+    background-color: #003FC8;
+    border: none;
   }
+
+
+  .helper-container {
+    padding: 20px;
+    color: white;
+    background-color: #000;
+    min-height: 100vh;
+  }
+  
+  .messages {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+    max-height: 80vh; /* Ограничиваем высоту блока сообщений */
+    overflow-y: auto; /* Добавляем возможность скроллинга */
+  }
+
+  .messages::-webkit-scrollbar {
+    display: none; /* Скрыть полосу прокрутки */
+  }
+  
+  .message {
+    background-color: #1a1a1a;
+    border-left: 4px solid #003FC8;
+    border-right: 4px solid #003FC8;
+    padding: 15px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+  
+  .message-text {
+    font-size: 16px;
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  
+  .message-date {
+    font-size: 13px;
+    color: #999;
+    text-align: right;
+  }
+  
