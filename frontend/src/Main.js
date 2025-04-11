@@ -1,7 +1,17 @@
-// Main.js
 import React from 'react';
 import Navigation from './components/Navigation';
-import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import './components/Styles.css'
+import {
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 
 const pieData = [
   { name: 'Еда', value: 400, color: '#0088FE' },
@@ -18,7 +28,12 @@ const lineData = [
   { name: '20.04', value: 300 },
 ];
 
-const expensesList = Array.from({ length: 40 }, (_, i) => `Покупка №${i + 1} — ${100 + i * 10}₽`);
+const expensesList = Array.from({ length: 40 }, (_, i) => ({
+  name: `Покупка №${i + 1}`,
+  amount: 100 + i * 10,
+  category: pieData[i % pieData.length].name,
+  date: new Date(2025, 3, (i % 30) + 1).toISOString(),
+}));
 
 export default function Main() {
   return (
@@ -80,9 +95,29 @@ export default function Main() {
         <div className="right-panel">
           <h2>Список расходов</h2>
           <ul className="expense-list">
-            {expensesList.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
+            {expensesList.map((item, index) => {
+              const categoryData = pieData.find((cat) => cat.name === item.category);
+              const color = categoryData ? categoryData.color : '#ccc';
+
+              const formattedDate = new Date(item.date).toLocaleDateString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+              });
+
+              return (
+                <li key={index} className="expense-item">
+                  <span className="color-box" style={{ backgroundColor: color }}></span>
+                  <div className="expense-info">
+                    <div>{item.name} — {item.amount}₽</div>
+                    <div className="expense-meta">
+                      <span className="expense-date">{formattedDate}</span>
+                      <span className="category-name">({item.category})</span>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>

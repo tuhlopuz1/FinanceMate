@@ -1,6 +1,7 @@
 // addTransaction.js
 import React, { useState } from 'react';
 import Navigation from './components/Navigation';
+import Swal from 'sweetalert2';
 
 export default function AddTransaction() {
   const [amount, setAmount] = useState('');
@@ -11,6 +12,18 @@ export default function AddTransaction() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Добавлена транзакция вручную:', { amount, category, date });
+    Swal.fire({
+      title: 'Успех!',
+      text: 'Транзакция добавлена',
+      icon: 'success',
+      confirmButtonText: 'ОК',
+      background: '#333', // Темный фон
+      color: '#fff', // Белый текст
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = window.location.href;
+      }
+    });;
   };
 
   const handleCSVChange = (e) => {
@@ -23,7 +36,16 @@ export default function AddTransaction() {
     e.preventDefault();
     if (csvFile) {
       console.log('CSV файл отправлен:', csvFile);
-      // Здесь будет логика отправки csvFile на сервер
+      Swal.fire({
+        title: 'Успех!',
+        text: 'Транзакции из файла добавлены',
+        icon: 'success',
+        confirmButtonText: 'ОК',
+        background: '#333', // Темный фон
+        color: '#fff', // Белый текст
+      });
+      
+      
     } else {
       console.log('Файл не выбран');
     }
@@ -34,6 +56,8 @@ export default function AddTransaction() {
       <Navigation />
       <form onSubmit={handleSubmit} id="addTr" className="form-container">
         <h2>Добавить транзакцию вручную</h2>
+
+        <input type="text" placeholder='Название (необязательно)'></input>
 
         <input
           type="number"
@@ -64,7 +88,7 @@ export default function AddTransaction() {
         />
 
         <button id="submCSV" className="submit" style={{ marginTop: '5x' }}>
-          Добавить CSV
+          Добавить
         </button>
 
         <hr style={{ margin: '20px 0', borderColor: '#444' }} />

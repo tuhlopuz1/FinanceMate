@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 function LogIn() {
-  const [activeTab, setActiveTab] = useState('email');
+  const [activeTab, setActiveTab] = useState('party_rk');
   const [email, setEmail] = useState('');
   const [party_rk, setParty_rk] = useState('');
   const [password, setPassword] = useState('');
