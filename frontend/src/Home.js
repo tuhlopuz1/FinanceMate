@@ -1,21 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import './components/Styles.css';
 function Home() {
   return (
     <div>
-      <h2 id="name">ChatAI</h2>
+      <h2 id="name">FinanceMate</h2>
       <div id="authButtons">
-        <Link to="/sign-up"><button id="signUpButton" className="homeButtons"><b>Sign up</b></button></Link>
-        <Link to="/log-in"><button className="homeButtons"><b>Log in</b></button></Link>
+        <Link to="/sign-up"><button id="signUpButton" className="homeButtons"><b>Регистрация</b></button></Link>
+        <Link to="/log-in"><button className="homeButtons"><b>Вход</b></button></Link>
       </div>
       <br></br>
       <div id="brief">
-        <h1>Chat with Multiple AI Models</h1>
+        <h1>Управляйте своими финансами эффективно</h1>
         <div id="desc">
-          <p>Create personalized conversations with different AI language models. Customize your experience and get the answers you need.</p>
+          <p>Анализируйте свои расходы с помощью интерактивных графиков, легко отслеживайте транзакции и получайте персонализированные финансовые советы.</p>
         </div>
-        <Link to="/sign-up"><button id="getStarted" className="homeButtons"><b>Get started</b></button></Link>
+        <Link to="/sign-up"><button id="getStarted" className="homeButtons"><b>Начать сейчас</b></button></Link>
       </div>
     </div>
   );

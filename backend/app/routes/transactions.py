@@ -18,8 +18,8 @@ def set_default_transactions():
     return {'response': 'success'}
 
 @transactions_route.get(path="/")
-def get_transactions(filters: Optional[FiltersRequest] = None):
+def get_transactions_by_party_rk(party_rk: int, start_date: str = '0000-00-00', end_date: str = '9999-12-31'):
     adapter = DatabaseAdapter()
     adapter.connect()
-    
-    return adapter.get_all('users_data')
+    adapter.initialize_tables()
+    return {"status": "ok"}

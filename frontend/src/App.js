@@ -6,7 +6,7 @@ import LogIn from './LogIn';
 import Main from './Main';
 import AddTransaction from './addTransaction';
 import FinanceHelper from './financeHelper';
- 
+import './components/Styles.css';
 
 
 

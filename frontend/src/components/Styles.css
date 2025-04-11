@@ -231,3 +231,7 @@ button.submit:hover {
   color: #999;
   text-align: right;
 }
+
+#finHead{
+  text-align: center;
+}

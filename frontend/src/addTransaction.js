@@ -1,29 +1,89 @@
-// addTransaction.js
 import React, { useState } from 'react';
 import Navigation from './components/Navigation';
 import Swal from 'sweetalert2';
+import './components/Styles.css';
 
 export default function AddTransaction() {
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
   const [date, setDate] = useState('');
   const [csvFile, setCsvFile] = useState(null);
+  const [newCategory, setNewCategory] = useState(''); // Для новой категории
+  const [categories, setCategories] = useState(['Еда', 'Транспорт', 'Развлечения', 'Другое']); // Существующие категории
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Добавлена транзакция вручную:', { amount, category, date });
+
+    if (category === 'new') {
+      // Если выбрана новая категория, показываем модальное окно
+      handleNewCategory();
+    } else {
+      console.log('Добавлена транзакция:', { amount, category, date });
+      Swal.fire({
+        title: 'Успех!',
+        text: 'Транзакция добавлена',
+        icon: 'success',
+        confirmButtonText: 'ОК',
+        background: '#333',
+        color: '#fff',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = window.location.href; // Перезагружаем страницу
+        }
+      });
+    }
+  };
+
+  const handleNewCategory = () => {
     Swal.fire({
-      title: 'Успех!',
-      text: 'Транзакция добавлена',
-      icon: 'success',
-      confirmButtonText: 'ОК',
-      background: '#333', // Темный фон
-      color: '#fff', // Белый текст
+      title: 'Создать новую категорию',
+      html: `
+        <input type="text" id="newCategoryInput" class="swal2-input" placeholder="Название новой категории">
+        <div style="margin-top: 10px;">
+          <label>
+            <input type="checkbox" id="saveCategoryCheckbox"> Сохранить категорию на будущее
+          </label>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Создать',
+      cancelButtonText: 'Отмена',
+      background: '#222',
+      color: '#fff',
+      preConfirm: () => {
+        const newCategoryName = document.getElementById('newCategoryInput').value.trim();
+        const shouldSave = document.getElementById('saveCategoryCheckbox').checked;
+        if (!newCategoryName) {
+          Swal.showValidationMessage('Пожалуйста, введите название категории');
+          return false;
+        }
+        return { newCategoryName, shouldSave };
+      },
     }).then((result) => {
       if (result.isConfirmed) {
-        window.location.href = window.location.href;
+        const { newCategoryName, shouldSave } = result.value;
+        // Добавляем транзакцию с новой категорией
+        console.log('Добавлена транзакция с новой категорией:', { amount, category: newCategoryName, date });
+
+        // Если пользователь выбрал сохранить категорию
+        if (shouldSave && !categories.includes(newCategoryName)) {
+          setCategories((prevCategories) => [...prevCategories, newCategoryName]);
+        }
+
+        Swal.fire({
+          title: 'Успех!',
+          text: 'Транзакция добавлена',
+          icon: 'success',
+          confirmButtonText: 'ОК',
+          background: '#333',
+          color: '#fff',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = window.location.href; // Перезагружаем страницу
+          }
+        });
       }
-    });;
+    });
   };
 
   const handleCSVChange = (e) => {
@@ -41,11 +101,9 @@ export default function AddTransaction() {
         text: 'Транзакции из файла добавлены',
         icon: 'success',
         confirmButtonText: 'ОК',
-        background: '#333', // Темный фон
-        color: '#fff', // Белый текст
+        background: '#333',
+        color: '#fff',
       });
-      
-      
     } else {
       console.log('Файл не выбран');
     }
@@ -57,7 +115,7 @@ export default function AddTransaction() {
       <form onSubmit={handleSubmit} id="addTr" className="form-container">
         <h2>Добавить транзакцию вручную</h2>
 
-        <input type="text" placeholder='Название (необязательно)'></input>
+        <input type="text" placeholder="Название (необязательно)" />
 
         <input
           type="number"
@@ -73,10 +131,12 @@ export default function AddTransaction() {
           required
         >
           <option value="">Выберите категорию</option>
-          <option value="Еда">Еда</option>
-          <option value="Транспорт">Транспорт</option>
-          <option value="Развлечения">Развлечения</option>
-          <option value="Другое">Другое</option>
+          {categories.map((cat, index) => (
+            <option key={index} value={cat}>
+              {cat}
+            </option>
+          ))}
+          <option value="new">Создать новую категорию</option> {/* Новый вариант */}
         </select>
 
         <input

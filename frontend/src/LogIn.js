@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-
+import './components/Styles.css';
 function LogIn() {
   const [activeTab, setActiveTab] = useState('party_rk');
   const [email, setEmail] = useState('');

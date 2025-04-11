@@ -1,7 +1,7 @@
 // financeHelper.js
 import React from 'react';
 import Navigation from './components/Navigation';
-
+import './components/Styles.css';
 const messages = [
   {
     id: 1,
@@ -61,7 +61,7 @@ export default function FinanceHelper() {
     <div>
       <Navigation />
       <div className="helper-container">
-        <h2>Финансовый помощник</h2>
+        <h2 id="finHead">Уведомления от финансового помощника</h2>
         <div className="messages">
           {messages.map((msg) => (
             <div className="message" key={msg.id}>
