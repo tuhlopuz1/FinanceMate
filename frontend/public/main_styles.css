@@ -1,0 +1,436 @@
+html {
+    background-color: rgb(9, 9, 11);
+    font-family: 'Montserrat', sans-serif;
+    overflow: hidden;
+}
+
+.homeButtons {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    border: none;
+    padding: 1.5vh 2.5vh;
+    cursor: pointer;
+    font-size: 2.3vh;
+    margin: 0.6vh;
+    border-radius: 0.3rem;
+    font-family: 'Montserrat', sans-serif;
+}
+#authButtons {
+    margin: 1vh;
+
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0.2vh;
+}
+
+h1 {
+    color: rgb(255, 255, 255);
+    text-align: center;
+    margin-bottom: 2vh;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 6vh; /* Размер текста */
+    font-weight: bold; /* Жирный шрифт */
+    background: linear-gradient(90deg, #6C98FA, #9C62F7); /* Градиентный фон */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Прозрачный цвет текста */
+    text-align: center; /* Выравнивание текста по центру */
+
+    
+}
+
+#desc {
+    color: rgb(150, 150, 150);
+    margin: 5vh auto;
+    max-width: 600px;
+    font-size: 3vh;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#brief {
+    text-align: center;
+}
+
+#name {
+    font-size: 3vh;
+    color: rgb(255, 255, 255);
+    
+    margin: 3vh;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+}
+
+.container {
+    background-color: rgb(30, 30, 30);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    color: #E7EFFD;
+    font-size: 2vh;
+}
+
+.register-form h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 1vh;
+}
+
+.input-group input {    
+    padding: 3%;
+    width: 93%;
+    color: #ccc;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin: 0 auto;
+    background-color: #1E1E1E;
+}
+
+#submitButton {
+    width: 100%;
+    padding: 10px;
+    background-color: #003BBF;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#submitButton:hover {
+    background-color: #003fc8;
+}
+
+.message {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.otherVariant {
+    color:#0137ab;
+}
+
+
+.app {
+  display: flex;
+  height: 100vh;
+  overflow: hidden; 
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  background-color: #2c2c3e;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, width 0.3s ease;
+  z-index: 1000;
+  /* overflow: hidden; */
+}
+
+.sidebar.open {
+  opacity:1;
+  width: 250px;
+  transform: translateX(0);
+}
+
+.sidebar.closed {
+  opacity:1;
+  width: 250px;
+  background-color: rgb(9, 9, 11);
+  transform: translateX(-100%);
+}
+
+/* Кнопка открытия/закрытия */
+.toggle-btn {
+  position: absolute;
+  top: 10px;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  visibility: visible; /* Ensure it's visible */
+  opacity: 1; /* Fully opaque */
+  z-index: 1000; /* Above other elements */
+  display: block; /* Ensure it's displayed */
+}
+
+.toggle-btn.inside {
+  right: 10px;
+}
+
+.toggle-btn.outside {
+  right: -40px;
+}
+
+/* Chat List */
+.chat-list {
+  flex: 1;
+  padding: 10px;
+  background-color: #19191B;
+  overflow-y: auto; /* Добавляем вертикальный скролл */
+  max-height: calc(100vh - 60px); /* Учитываем отступы */
+}
+
+.chat-list::-webkit-scrollbar {
+  display: none;
+}
+
+.chat-item {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  background-color: #292A2D;
+  color: #fff;
+}
+
+.chat-item.active {
+  background-color: #003FC8;
+}
+
+.profile-section {
+  padding: 10px;
+  background-color: #333;
+}
+
+.profile-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+/* Основной контент */
+.main-content {
+  flex: 1;
+  margin-left: 250px;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease;
+  color: #fff;
+}
+
+.sidebar.closed + .main-content {
+  margin-left: 0;
+}
+
+.chat-header {
+  padding: 20px;
+  background-color: #19191B;
+  border-bottom: 1px solid #444;
+  z-index: 999;
+}
+
+.chat-body {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: calc(100vh - 150px);
+}
+
+.chat-footer {
+  padding: 10px;
+  background-color: #19191B;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#inputAndSendButton {
+  display: flex;
+}
+
+.model-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.model-btn {
+  padding: 10px;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.model-btn.active {
+  background-color: #003FC8;
+}
+
+
+
+.text {
+  color: #fff;
+}
+
+/* Адаптивный дизайн */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100vw; /* Делаем Sidebar на всю ширину */
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar.closed {
+    width: 100vw; /* Убедимся, что ширина остается 100% */
+  }
+
+
+  .main-content {
+    margin-left: 0; /* Оставляем основной контент без отступа */
+  }
+
+  /* Перемещение кнопки открытия */
+  .toggle-btn.outside {
+    right: -40px;
+  }
+}
+
+/* Контейнер для ввода */
+.input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Поле ввода */
+.chat-input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #444444;
+  color: #fff;
+  resize: none;
+  height: 50px;
+  margin-right: 13px;
+}
+
+/* Кнопка отправки */
+.send-btn {
+  padding: 10px 15px;
+  background-color: #003FC8;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.send-btn:hover {
+  background-color: #114Fd8;
+}
+
+.chat-header-fixed {
+  /* display: flex; */
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #19191B;
+  border-bottom: 1px solid #444;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Кнопка "New Chat" */
+.new-chat-btn {
+  background-color: #313131;
+  color: white;
+  border: none;
+  padding: 10px 80px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.new-chat-btn:hover {
+  background-color: #5f5f5f;
+}
+
+.message-1 {
+  background-color: #1f1f1f;
+  width: 93%;
+  max-width: 700px;
+  border-radius: 10px;
+  padding: 10px;
+  word-wrap: break-word;
+}
+.message-0 {
+  background-color: #3d3d3d;
+  width: 93%;
+  max-width: 700px;
+  border-radius: 10px;
+  padding: 10px;
+  word-wrap: break-word;
+}
+
+
+
+/* .tab {
+  
+  background-color: rgba(255, 255, 255, 0);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: underline;
+  margin: 0 auto;
+  width: 50%;
+}
+
+
+.tabs {
+  width: 70%;
+  margin: 0 auto;
+  
+} */
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+}
+
+.tab {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.tab.active {
+  background-color: #2d2d2d;
+  border-bottom: 2px solid #003FC8;
+}
+
+.tab:hover {
+  background-color: #373737;
+}

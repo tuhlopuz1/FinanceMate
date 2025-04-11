@@ -1,0 +1,172 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* Занимает всю высоту экрана */
+
+    font-family: sans-serif;
+    background-color: #000;
+    color: #fff;
+  }
+  
+  /* Навигация */
+  nav {
+    background-color: #111;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(255,255,255,0.05);
+  }
+  
+  nav button {
+    margin-right: 10px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #222;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  nav button:hover {
+    background-color: #333;
+  }
+  
+  /* Основная страница */
+  .main-container {
+    display: flex;
+    height: calc(100vh - 60px);
+  }
+  
+  .left-panel, .right-panel {
+    width: 50%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  .left-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .right-panel {
+    overflow-y: auto;
+    background-color: #111;
+    border-left: 1px solid #222;
+  }
+  
+  .expense-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .expense-list li {
+    margin-bottom: 8px;
+    padding: 8px;
+    background-color: #1a1a1a;
+    border-radius: 4px;
+  }
+  
+  /* Форма добавления транзакции */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 400px;
+    margin: 30px auto;
+  }
+  
+  input, select {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: #222;
+    color: white;
+  }
+  
+  input[type="submit"], button.submit {
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  
+  input[type="submit"]:hover, button.submit:hover {
+    background-color: #666;
+  }
+  
+  /* Выпадающее меню аккаунта */
+  .profile-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: #222;
+    border: 1px solid #444;
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: 10;
+  }
+  
+  .profile-menu button {
+    padding: 10px 20px;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    color: white;
+  }
+  
+  .profile-menu button:hover {
+    background-color: #333;
+  }
+  
+  /* Легенда к диаграмме */
+.left-panel ul li {
+    font-size: 14px;
+    color: #ddd;
+  }
+  .top-left {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
+  
+  .legend ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .legend li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    color: #ccc;
+  }
+  
+  .color-box {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin-right: 10px;
+    border-radius: 4px;
+  }
+  
+  .bottom-left {
+    margin-top: 40px;
+    width: 100%;
+  }
+
+
+  #addTr{
+    background-color: #111;
+    border-radius: 1rem;
+    padding: 3%;
+  }
+  #defBtn{
+    background-color: #222;
+    color: #fff;
+    border-radius: 0.5rem;
+    height: 5vh;
+    border: none;
+  }
