@@ -219,3 +219,11 @@ body {
     text-align: right;
   }
   
+  .expense-color-box {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+    border-radius: 4px; /* Сделает квадратик с округлыми углами */
+  }
+  
