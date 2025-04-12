@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from typing import Optional
 
-from backend.models.transactions.modules import FiltersRequest
+from backend.models.transactions.modules import AddTransactionRequest
 from backend.adapters.db_source import DatabaseAdapter
 
 
@@ -24,3 +24,12 @@ def get_transactions_by_party_rk(party_rk: int, start_date: str = '0000-00-00', 
     adapter.initialize_tables()
     adapter.add_large_csv_with_chunks('task-files/all_user_transactions.csv', 'all_user_transactions')
     return {"status": "ok"}
+
+@transactions_route.post(path="/")
+def add_transaction(request: AddTransactionRequest):
+    adapter = DatabaseAdapter()
+    adapter.connect()
+    
+    adapter.add_large_csv_with_chunks('task-files/all_user_transactions.csv', 'all_user_transactions')
+    return {"status": "ok"}
+
