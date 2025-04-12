@@ -56,7 +56,7 @@ def sign_up(body: SignUp):
     adapter.insert('email_users', new_user1)
     adapter.insert('users_data', new_user2)
 
-    return {'status': 'successfully signed up'}
+    return {'party_rk': new_party_rk}
 
 
 @auth_route.post(path="/log-in-by-email")

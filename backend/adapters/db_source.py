@@ -74,6 +74,12 @@ class DatabaseAdapter:
                 password VARCHAR(255)
         );
         """)
+        self.execute_with_request("""
+            CREATE TABLE IF NOT EXISTS custom_categories (
+                party_rk INT,
+                categories TEXT[]
+        );
+        """)
         
     def add_table_from_csv(self, csv_file: str, table_name: str) -> None:
         """Загружает данные из CSV файла в указанную таблицу."""

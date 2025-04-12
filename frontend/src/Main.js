@@ -39,11 +39,13 @@ export default function Main() {
   
   const [endDate, setEndDate] = useState('');
 
+
   // Загрузка данных с сервера
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        const response = await fetch('http://localhost:8000/transactions?party_rk=646743487');
+        console.log(localStorage.getItem('party_rk'))
+        const response = await fetch('http://localhost:8000/transactions?party_rk='+localStorage.getItem('party_rk').toString());
         const data = await response.json();
   
         const normalizedData = data.map(item => ({
@@ -196,7 +198,7 @@ export default function Main() {
                   <li key={index} className="expense-item">
                     <span className="color-box" style={{ backgroundColor: color }}></span>
                     <div className="expense-info">
-                      <div>{item.name} — {item.amount}₽</div>
+                      <div>{item.name} — {item.amount} у.е.</div>
                       <div className="expense-meta">
                         <span className="expense-date">{formattedDate}</span>
                         <span className="category-name">({item.category})</span>
