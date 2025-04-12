@@ -1,7 +1,9 @@
 import uuid
-from fastapi import APIRouter, HTTPException
+import pandas as pd
+from fastapi import APIRouter, HTTPException, File, UploadFile
 from fastapi.responses import JSONResponse
 from typing import Optional
+from io import StringIO
 
 from backend.models.transactions.modules import AddTransactionRequest
 from backend.adapters.db_source import DatabaseAdapter
@@ -44,5 +46,27 @@ def add_transaction(request: AddTransactionRequest):
     "utilization_flg": 0        
 })
     
+    return {"status": "ok"}
+
+@transactions_route.post(path="/csv")
+async def add_transaction_csv(file: UploadFile = File(...)):
+    # Чтение содержимого файла
+    contents = await file.read()
+    # Преобразование содержимого в строку
+    csv_string = contents.decode("utf-8")
+    
+    # Использование pandas для обработки CSV
+    df = pd.read_csv(StringIO(csv_string), sep=';')
+    
+    # Здесь вы можете добавить логику обработки данных
+    # Например, вернуть первые 5 строк
+    print(df.head().to_dict(orient="records")[0])
+    
+    adapter = DatabaseAdapter()
+    adapter.connect()
+    adapter.insert('all_user_transactions', df.head().to_dict(orient="records")[0])
+    
+    # adapter.insert('all_user_transactions',
+    #                df.head().to_dict())
     return {"status": "ok"}
 
