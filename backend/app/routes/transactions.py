@@ -41,7 +41,7 @@ def add_transaction(request: AddTransactionRequest):
     "brand_nm": request.brand_name,
     "loyalty_cashback_category_nm": request.category,
     "loyalty_accrual_rub_amt": "",
-    "utilization_flg": 0
+    "utilization_flg": 0        
 })
     
     return {"status": "ok"}
