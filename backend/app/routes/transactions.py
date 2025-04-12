@@ -1,6 +1,6 @@
 import uuid
 import pandas as pd
-from fastapi import APIRouter, HTTPException, File, UploadFile
+from fastapi import APIRouter, HTTPException, File, UploadFile, Query
 from fastapi.responses import JSONResponse
 from typing import Optional
 from io import StringIO
@@ -35,8 +35,10 @@ def get_transactions_by_party_rk(party_rk: int):
             curr['amount'] = transactions[i]['transaction_amt_rur']
             curr['date'] = transactions[i]['real_transaction_dttm']
             res.append(curr)
+        else:
+            print('ПРОПУЩЕНА ЗАПИСЬ', transactions[i])
     
-    print(transactions)
+    # print(transactions)
     print(len(transactions))
     print(len(res))
     return res
@@ -63,7 +65,10 @@ def add_transaction(request: AddTransactionRequest):
     return {"status": "ok"}
 
 @transactions_route.post(path="/csv")
-async def add_transaction_csv(file: UploadFile = File(...)):
+async def add_transaction_csv(
+    file: UploadFile = File(...),
+    party_rk: int = Query(..., description="Уникальный идентификатор пользователя")
+):
     contents = await file.read()
 
     try:
@@ -72,14 +77,32 @@ async def add_transaction_csv(file: UploadFile = File(...)):
         csv_string = contents.decode("Windows-1251", errors="replace")
 
     df = pd.read_csv(StringIO(csv_string), sep=';')
-    
-    print(df.head().to_dict(orient="records")[0])
-    
+
+    # Добавляем party_rk в каждую строку
+    df['party_rk'] = party_rk
+
+    # Проверяем, что все нужные поля есть
+    required_columns = {"brand_nm","transaction_amt_rur","loyalty_cashback_category_nm","real_transaction_dttm"}
+    if not required_columns.issubset(df.columns):
+        raise HTTPException(status_code=400, detail={
+            "status": "error",
+            "message": f"Отсутствуют обязательные колонки: {required_columns - set(df.columns)}"
+        }) 
+
     adapter = DatabaseAdapter()
     adapter.connect()
-    adapter.insert('all_user_transactions', df.head().to_dict(orient="records")[0])
-    
-    return {"status": "ok"}
+
+    records = df.to_dict(orient="records")
+    for record in records:
+        record['transaction_amt_rur'] = str(record['transaction_amt_rur'])
+        record['transaction_type_cd'] = 'PUC'
+
+        print(record)
+        print('.............')
+        print(adapter.insert('all_user_transactions', record))
+        print('.............')
+
+    return {"status": "ok", "inserted_rows": len(records)}
 
 
 @transactions_route.post(path="/add-category")
