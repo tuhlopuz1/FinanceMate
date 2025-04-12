@@ -183,7 +183,9 @@ class DatabaseAdapter:
         import pandas as pd
 
         self.create_table_if_not_exists(table_name)
-
+        data = self.execute_with_request(f'SELECT * FROM {table_name} LIMIT 12')
+        if data != []:
+            return
         try:
             for chunk in pd.read_csv(
                 csv_file,
