@@ -70,7 +70,10 @@ class DatabaseAdapter:
     def add_table_from_csv(self, csv_file: str, table_name: str) -> None:
         """Загружает данные из CSV файла в указанную таблицу."""
         self.create_table_if_not_exists(table_name)
-
+        
+        data = self.execute_with_request(f'SELECT * FROM {table_name} LIMIT 12')
+        if data != []:
+            return
         try:
             with open(csv_file, mode='r', encoding='utf-8') as file:
                 reader = csv.reader(file, delimiter=';')  # Указываем разделитель как точка с запятой

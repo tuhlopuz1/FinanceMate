@@ -29,7 +29,20 @@ def get_transactions_by_party_rk(party_rk: int, start_date: str = '0000-00-00', 
 def add_transaction(request: AddTransactionRequest):
     adapter = DatabaseAdapter()
     adapter.connect()
+    adapter.insert('all_user_transactions',
+                   {
+    "party_rk": request.party_rk,
+    "account_rk": 0,
+    "financial_account_type_cd": "",
+    "financial_account_subtype_cd": "",
+    "transaction_type_cd": "",
+    "transaction_amt_rur": request.amt,
+    "real_transaction_dttm": request.dttm,
+    "brand_nm": request.brand_name,
+    "loyalty_cashback_category_nm": request.category,
+    "loyalty_accrual_rub_amt": "",
+    "utilization_flg": 0
+})
     
-    adapter.add_large_csv_with_chunks('task-files/all_user_transactions.csv', 'all_user_transactions')
     return {"status": "ok"}
 
