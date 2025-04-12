@@ -9,3 +9,10 @@ class AddTransactionRequest(BaseModel):
     category: Optional[str] = '0'
     dttm: Optional[date] = None
     amt: Optional[str] = 0
+
+class SignUp(BaseModel):
+    email: str
+    password: str
+    gender: str
+    age: int
+    salary: int

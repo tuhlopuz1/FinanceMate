@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Navigation from './components/Navigation';
 import './components/Styles.css';
 import {
@@ -13,76 +13,91 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-// Зафиксированные цвета для категорий (всего 30)
+// Зафиксированные цвета для категорий
 const predefinedColors = [
-  '#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF0000', '#00FF00', '#0000FF', '#800080',
-  '#FFD700', '#008000', '#FF6347', '#800000', '#FF4500', '#2E8B57', '#D2691E', '#7FFF00',
-  '#DC143C', '#F4A460', '#FF1493', '#4169E1', '#ADFF2F', '#B22222', '#A52A2A', '#C71585',
-  '#DAA520', '#20B2AA', '#000080', '#F0E68C', '#32CD32', '#9932CC'
+  '#0088FE','#00C49F','#FFBB28','#FF8042','#FF0000','#00FF00','#0000FF','#800080','#FFD700','#008000',
+  '#FF6347','#800000','#FF4500','#2E8B57','#D2691E','#7FFF00','#DC143C','#F4A460','#FF1493','#4169E1',
+  '#ADFF2F','#B22222','#A52A2A','#C71585','#DAA520','#20B2AA','#000080','#F0E68C','#32CD32','#9932CC',
+  '#E9967A','#4B0082','#00CED1','#FF69B4','#B0C4DE','#7B68EE','#8B008B','#3CB371','#6A5ACD','#DB7093',
+  '#CD5C5C','#8FBC8F','#483D8B','#6495ED','#FFB6C1','#708090','#778899','#BDB76B','#00FA9A','#C0C0C0',
+  '#BA55D3','#66CDAA','#FA8072','#00BFFF','#8A2BE2','#48D1CC','#FFDAB9','#FFE4B5','#E0FFFF','#FFE4E1',
+  '#7CFC00','#FAFAD2','#90EE90','#40E0D0','#E6E6FA','#F5DEB3','#F08080','#9370DB','#C8A2C8','#D8BFD8',
+  '#B8860B','#F5F5DC','#F0FFF0','#B0E0E6','#87CEFA'
 ];
 
-let expensesList = Array.from({ length: 40 }, (_, i) => ({
-  name: `Покупка №${i + 1}`,
-  amount: 100 + i * 10,
-  category: ['Еда', 'Транспорт', 'Развлечения', 'Другое'][i % 4],
-  date: new Date(2025, 3, (i % 30) + 1).toISOString(),
-}));
-
-// expensesList = [];
 
 export default function Main() {
+  const [expenses, setExpenses] = useState([]);
   const [filteredCategory, setFilteredCategory] = useState('');
-  const [startDate, setStartDate] = useState('');
+  const getDefaultStartDate = () => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - 1);
+    return date.toISOString().split('T')[0];
+  };
+  
+  const [startDate, setStartDate] = useState(getDefaultStartDate());
+  
   const [endDate, setEndDate] = useState('');
 
-  const handleCategoryFilterChange = (e) => {
-    setFilteredCategory(e.target.value);
-  };
+  // Загрузка данных с сервера
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/transactions?party_rk=646743487');
+        const data = await response.json();
+  
+        const normalizedData = data.map(item => ({
+          ...item,
+          amount: parseFloat(item.amount),
+          date: new Date(item.date).toISOString(),
+        }));
+  
+        setExpenses(normalizedData);
+      } catch (error) {
+        console.error('Ошибка при загрузке расходов:', error);
+      }
+    };
+  
+    fetchExpenses();
+  }, []);
 
-  const handleStartDateChange = (e) => {
-    setStartDate(e.target.value);
-  };
+  // Фильтрация
+  const filteredExpenses = useMemo(() => {
+    return expenses.filter((item) => {
+      const itemDate = new Date(item.date);
+      const isCategoryMatch = filteredCategory ? item.category === filteredCategory : true;
+      const isDateMatch =
+        (startDate ? itemDate >= new Date(startDate) : true) &&
+        (endDate ? itemDate <= new Date(endDate) : true);
+      return isCategoryMatch && isDateMatch;
+    });
+  }, [expenses, filteredCategory, startDate, endDate]);
 
-  const handleEndDateChange = (e) => {
-    setEndDate(e.target.value);
-  };
-
-  // Фильтрация расходов по дате и категории
-  const filteredExpenses = expensesList.filter((item) => {
-    const itemDate = new Date(item.date);
-    const isCategoryMatch = filteredCategory ? item.category === filteredCategory : true;
-    const isDateMatch =
-      (startDate ? itemDate >= new Date(startDate) : true) &&
-      (endDate ? itemDate <= new Date(endDate) : true);
-
-    return isCategoryMatch && isDateMatch;
-  });
-
-  // Динамическое формирование pieData
+  // Категории и pieData
   const pieData = useMemo(() => {
-    const categoryCounts = filteredExpenses.reduce((acc, item) => {
-      acc[item.category] = (acc[item.category] || 0) + item.amount;
-      return acc;
-    }, {});
+    const categoryTotals = {};
+    filteredExpenses.forEach(item => {
+      categoryTotals[item.category] = (categoryTotals[item.category] || 0) + item.amount;
+    });
 
-    return Object.keys(categoryCounts).map((category, index) => ({
+    return Object.entries(categoryTotals).map(([category, value], index) => ({
       name: category,
-      value: categoryCounts[category],
+      value,
       color: predefinedColors[index % predefinedColors.length],
     }));
   }, [filteredExpenses]);
 
-  // Динамическое формирование lineData
+  // Данные для графика
   const lineData = useMemo(() => {
-    const dateCounts = filteredExpenses.reduce((acc, item) => {
+    const dateTotals = {};
+    filteredExpenses.forEach(item => {
       const date = new Date(item.date).toLocaleDateString('ru-RU');
-      acc[date] = (acc[date] || 0) + item.amount;
-      return acc;
-    }, {});
+      dateTotals[date] = (dateTotals[date] || 0) + item.amount;
+    });
 
-    return Object.keys(dateCounts).map((date) => ({
+    return Object.entries(dateTotals).map(([date, value]) => ({
       name: date,
-      value: dateCounts[date],
+      value,
     }));
   }, [filteredExpenses]);
 
@@ -90,10 +105,8 @@ export default function Main() {
     <div>
       <Navigation />
       <div className="main-container">
-        {/* Левая часть экрана */}
         <div className="left-panel">
           <div className="top-left">
-            {/* Легенда */}
             <div className="legend">
               <h3>Категории:</h3>
               <ul>
@@ -106,31 +119,32 @@ export default function Main() {
               </ul>
             </div>
 
-            {/* Круговая диаграмма */}
             <div>
-              <PieChart width={300} height={300}>
-                <Pie
-                  data={pieData}
-                  cx={150}
-                  cy={150}
-                  innerRadius={60}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                  label
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-              </PieChart>
+            <PieChart width={400} height={400}>
+            <Pie
+              data={pieData}
+              cx={200}
+              cy={200}
+              innerRadius={80}
+              outerRadius={130}
+              dataKey="value"
+              label
+              labelLine={false}
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+          </PieChart>
+              <div style={{ marginTop: '10px', fontWeight: 'bold' }}>
+                Всего: {filteredExpenses.reduce((acc, item) => acc + item.amount, 0).toFixed(2)}₽
+              </div>
             </div>
           </div>
 
-          {/* График под ними */}
           <div className="bottom-left">
             <h2>График расходов</h2>
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer id="gr" width="100%" height={200}>
               <LineChart data={lineData}>
                 <XAxis dataKey="name" stroke="#aaa" />
                 <YAxis stroke="#aaa" />
@@ -141,52 +155,37 @@ export default function Main() {
           </div>
         </div>
 
-        {/* Правая часть: Список расходов с фильтрами */}
         <div className="right-panel">
-          {/* Фиксированный блок фильтров */}
           <div className="filter-container">
             <h2>Фильтровать расходы</h2>
             <div className="filter-options">
               <label>
                 Категория:
-                <select value={filteredCategory} onChange={handleCategoryFilterChange}>
+                <select value={filteredCategory} onChange={e => setFilteredCategory(e.target.value)}>
                   <option value="">Все категории</option>
-                  {pieData.map((cat) => (
-                    <option key={cat.name} value={cat.name}>
-                      {cat.name}
-                    </option>
+                  {[...new Set(expenses.map(e => e.category))].map(category => (
+                    <option key={category} value={category}>{category}</option>
                   ))}
                 </select>
               </label>
 
               <label>
                 Начальная дата:
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={handleStartDateChange}
-                />
+                <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
               </label>
 
               <label>
                 Конечная дата:
-                <input
-                  type="date"
-                  value={endDate}
-                  onChange={handleEndDateChange}
-                />
+                <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} />
               </label>
             </div>
           </div>
 
-          {/* Список расходов */}
           <div className="expense-list-container">
             <h2>Список расходов</h2>
             <ul className="expense-list">
               {filteredExpenses.map((item, index) => {
-                const categoryData = pieData.find((cat) => cat.name === item.category);
-                const color = categoryData ? categoryData.color : '#ccc';
-
+                const color = pieData.find(cat => cat.name === item.category)?.color || '#ccc';
                 const formattedDate = new Date(item.date).toLocaleDateString('ru-RU', {
                   day: '2-digit',
                   month: '2-digit',

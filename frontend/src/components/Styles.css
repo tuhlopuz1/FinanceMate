@@ -41,19 +41,19 @@ nav button:hover {
 
 /* Левая панель */
 .left-panel {
-  width: 50%;
+  width: 60%;
   padding: 20px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
   overflow-y: auto;
-  height: 100vh;
 }
 
 /* Правая панель */
 .right-panel {
-  width: 50%;
+  width: 40%;
   padding: 20px;
   box-sizing: border-box;
   overflow-y: auto;
@@ -64,6 +64,9 @@ nav button:hover {
 }
 
 .right-panel::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+.left-panel::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
 }
 
@@ -234,4 +237,14 @@ button.submit:hover {
 
 #finHead{
   text-align: center;
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#gr {
+  margin-bottom: 100px;
 }
