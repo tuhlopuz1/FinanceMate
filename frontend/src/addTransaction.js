@@ -147,7 +147,7 @@ export default function AddTransaction() {
     const formData = new FormData();
     formData.append('file', csvFile);
 
-    fetch('http://localhost:8000/import-csv', {
+    fetch('http://localhost:8000/transactions/csv', {
       method: 'POST',
       body: formData
     })
