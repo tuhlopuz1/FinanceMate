@@ -9,7 +9,7 @@ body {
 
 /* Навигация */
 nav {
-  background-color: #111;
+  background-color: #555;
   padding: 12px 20px;
   display: flex;
   justify-content: space-between;
@@ -58,7 +58,7 @@ nav button:hover {
   box-sizing: border-box;
   overflow-y: auto;
   max-height: 100vh;
-  background-color: #111;
+  background-color: #555;
   border-left: 1px solid #222;
   scrollbar-width: none; /* Firefox */
 }
@@ -180,7 +180,7 @@ button.submit:hover {
 
 /* Кнопки и блоки */
 #addTr {
-  background-color: #111;
+  background-color: #555;
   border-radius: 1rem;
   padding: 3%;
 }
@@ -278,4 +278,7 @@ nav {
   color: #fff;
   min-height: calc(100vh - 60px); /* вычитаем высоту шапки */
   box-sizing: border-box;
+}
+.filter-container {
+  margin-top: 7vh;
 }

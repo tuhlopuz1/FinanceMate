@@ -8,7 +8,7 @@ client = Client()
 ai_route = APIRouter(prefix="/ai", tags=["ai"])
 
 @ai_route.get(path="/future-advice")
-def get_advice(name: str, amt: int):
+def get_advice(party_rk: int, name: str, amt: int):
     response = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[{"role": "user",

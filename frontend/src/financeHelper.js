@@ -39,7 +39,7 @@ export default function FinanceHelper() {
       preConfirm: () => {
         const name = document.getElementById('item-name').value.trim();
         const amount = document.getElementById('item-amount').value.trim();
-
+  
         if (!name || !amount) {
           Swal.showValidationMessage('Пожалуйста, заполните все поля');
           return false;
@@ -47,32 +47,49 @@ export default function FinanceHelper() {
         return { name, amount };
       }
     });
-
+  
     if (formValues) {
+      // Показываем модалку с колесом загрузки
+      Swal.fire({
+        title: 'Анализируем...',
+        html: '<div class="swal2-loading" style="font-size: 18px;">Пожалуйста, подождите</div>',
+        allowOutsideClick: false,
+        background: '#333',
+        color: '#fff',
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+  
       try {
-        const response = await fetch(`http://localhost:8000/finance-helper/advice?party_rk=${localStorage.getItem('party_rk')}&name=${encodeURIComponent(formValues.name)}&amount=${formValues.amount}`);
+        const response = await fetch(
+          `http://localhost:8000/ai/future-advice?party_rk=${localStorage.getItem('party_rk')}&name=${encodeURIComponent(formValues.name)}&amt=${formValues.amount}`
+        );
         const data = await response.json();
-
-        Swal.fire({
+  
+        // Обновляем текущее модальное окно с результатом
+        Swal.update({
           title: 'Совет',
-          text: data.advice || 'Не удалось получить совет.',
+          html: `<div style="font-size: 16px;">${data.result || 'Не удалось получить совет.'}</div>`,
           icon: 'info',
+          showConfirmButton: true,
           confirmButtonText: 'ОК',
-          background: '#333',
-          color: '#fff',
         });
+        Swal.hideLoading();
       } catch (error) {
         console.error('Ошибка при получении совета:', error);
-        Swal.fire({
+        Swal.update({
           title: 'Ошибка!',
-          text: 'Не удалось получить совет. Попробуйте позже.',
+          html: '<div style="font-size: 16px;">Не удалось получить совет. Попробуйте позже.</div>',
           icon: 'error',
-          background: '#333',
-          color: '#fff',
+          showConfirmButton: true,
+          confirmButtonText: 'ОК',
         });
+        Swal.hideLoading();
       }
     }
   };
+  
 
   const handleMonthlyAnalysis = () => {
     Swal.fire({
