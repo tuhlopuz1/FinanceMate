@@ -3,7 +3,9 @@ from typing import Optional
 from datetime import date
 
 
-class FiltersRequest(BaseModel):
-    party_rk: str
-    min_date: Optional[date] = None
-    max_date: Optional[date] = None
+class AddTransactionRequest(BaseModel):
+    party_rk: int
+    brand_name: Optional[str] = '0'
+    category: Optional[str] = '0'
+    dttm: Optional[date] = None
+    amt: Optional[str] = 0
