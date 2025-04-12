@@ -7,8 +7,8 @@ export default function Navigation() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // здесь можно добавить логику очистки токенов
-    navigate('/login');
+    localStorage.clear();
+    navigate('/');
   };
 
   return (

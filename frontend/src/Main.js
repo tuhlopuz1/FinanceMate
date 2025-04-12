@@ -198,7 +198,7 @@ export default function Main() {
                   <li key={index} className="expense-item">
                     <span className="color-box" style={{ backgroundColor: color }}></span>
                     <div className="expense-info">
-                      <div>{item.name} — {item.amount}₽</div>
+                      <div>{item.name} — {item.amount} у.е.</div>
                       <div className="expense-meta">
                         <span className="expense-date">{formattedDate}</span>
                         <span className="category-name">({item.category})</span>

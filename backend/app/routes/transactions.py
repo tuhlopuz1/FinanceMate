@@ -51,13 +51,13 @@ def add_transaction(request: AddTransactionRequest):
     "account_rk": 0,
     "financial_account_type_cd": "",
     "financial_account_subtype_cd": "",
-    "transaction_type_cd": "",
+    "transaction_type_cd": "PUC",
     "transaction_amt_rur": request.amt,
     "real_transaction_dttm": request.dttm,
     "brand_nm": request.brand_name,
     "loyalty_cashback_category_nm": request.category,
     "loyalty_accrual_rub_amt": "",
-    "utilization_flg": 0        
+    "utilization_flg": 0
 })
     
     return {"status": "ok"}
@@ -84,3 +84,33 @@ async def add_transaction_csv(file: UploadFile = File(...)):
     #                df.head().to_dict())
     return {"status": "ok"}
 
+@transactions_route.post(path="/add-category")
+async def add_transaction_category(party_rk: int, category: str):
+    adapter = DatabaseAdapter()
+    adapter.connect()
+    adapter.initialize_tables()
+    current_categories = adapter.get_by_value('custom_categories', 'party_rk', party_rk)
+
+    if len(current_categories) == 0:
+        adapter.insert('custom_categories', {
+            'party_rk': party_rk,
+            'categories': [category]
+        })
+    else:
+        adapter.delete_by_value('custom_categories', 'party_rk', party_rk)
+        adapter.insert('custom_categories', {
+            'party_rk': party_rk,
+            'categories': current_categories[0]['categories'] + [category]
+        })
+
+@transactions_route.get(path="/get-categories")
+async def get_categories(party_rk: int):
+    adapter = DatabaseAdapter()
+    adapter.connect()
+    adapter.initialize_tables()
+
+    categories = adapter.get_by_value('custom_categories', 'party_rk', party_rk)
+
+    if len(categories) == 0:
+        return []
+    return  categories[0]['categories']
