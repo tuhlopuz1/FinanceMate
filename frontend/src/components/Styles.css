@@ -185,6 +185,7 @@ button.submit:hover {
 }
 
 #defBtn,
+#sbtn,
 #submCSV {
   background-color: #003FC8;
   color: #fff;

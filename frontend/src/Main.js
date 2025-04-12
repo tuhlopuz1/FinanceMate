@@ -39,11 +39,13 @@ export default function Main() {
   
   const [endDate, setEndDate] = useState('');
 
+
   // Загрузка данных с сервера
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        const response = await fetch('http://localhost:8000/transactions?party_rk=646743487');
+        console.log(localStorage.getItem('party_rk'))
+        const response = await fetch('http://localhost:8000/transactions?party_rk='+localStorage.getItem('party_rk').toString());
         const data = await response.json();
   
         const normalizedData = data.map(item => ({
