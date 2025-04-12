@@ -67,7 +67,7 @@ async def add_transaction_csv(file: UploadFile = File(...)):
     # Чтение содержимого файла
     contents = await file.read()
     # Преобразование содержимого в строку
-    csv_string = contents.decode("utf-8")
+    csv_string = contents.decode("Windows-1251")
     
     # Использование pandas для обработки CSV
     df = pd.read_csv(StringIO(csv_string), sep=';')
