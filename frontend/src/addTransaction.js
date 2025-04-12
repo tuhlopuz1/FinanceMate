@@ -147,20 +147,37 @@ export default function AddTransaction() {
     const formData = new FormData();
     formData.append('file', csvFile);
 
-    fetch('http://localhost:8000/transactions/csv', {
+    fetch('http://localhost:8000/transactions/csv?party_rk='+localStorage.getItem('party_rk').toString(), {
       method: 'POST',
       body: formData
     })
       .then(res => res.json())
-      .then(() => {
-        Swal.fire({
-          title: 'Успех!',
-          text: 'Транзакции из файла добавлены',
-          icon: 'success',
-          confirmButtonText: 'ОК',
-          background: '#333',
-          color: '#fff',
-        });
+      .then((res) => {
+        try{
+          console.log(res.detail.status)
+          if (res.detail.status === 'error'){
+            Swal.fire({
+              title: 'Ошибка!',
+              text: 'Не удалось загрузить CSV файл',
+              icon: 'error',
+              confirmButtonText: 'ОК',
+              background: '#333',
+              color: '#fff',
+            });}
+            else{
+              
+            }
+          }
+          catch (error){
+              Swal.fire({
+                title: 'Успех!',
+                text: 'Транзакции из файла добавлены',
+                icon: 'success',
+                confirmButtonText: 'ОК',
+                background: '#333',
+                color: '#fff',
+              });
+            }
       })
       .catch(err => {
         console.error('Ошибка при загрузке CSV:', err);
@@ -224,7 +241,43 @@ export default function AddTransaction() {
 
         <hr style={{ margin: '20px 0', borderColor: '#444' }} />
 
-        <h2>Импорт из CSV</h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <h2 style={{ margin: 0 }}>Импорт из CSV</h2>
+        <button
+          type="button"
+          onClick={() => {
+            Swal.fire({
+              title: 'Формат CSV-файла',
+              html: `
+                <p>Файл должен содержать следующие колонки:</p>
+                <ul style="text-align: left;">
+                  <li><b>brand_nm</b> — Название покупки</li>
+                  <li><b>transaction_amt_rur</b> — Сумма покупки</li>
+                  <li><b>loyalty_cashback_category_nm</b> — Категория</li>
+                  <li><b>real_transaction_dttm</b> — Дата (в формате YYYY-MM-DD)</li>
+                </ul>
+              `,
+              icon: 'info',
+              confirmButtonText: 'ОК',
+              background: '#333',
+              color: '#fff',
+            });
+          }}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: '#0af',
+            fontSize: '20px',
+            cursor: 'pointer',
+            padding: 0,
+          }}
+          aria-label="Информация о CSV"
+          title="Информация о CSV"
+        >
+          ⓘ
+        </button>
+      </div>
+
         <input type="file" accept=".csv" onChange={handleCSVChange} />
         {csvFile && <p>Файл выбран: {csvFile.name}</p>}
 

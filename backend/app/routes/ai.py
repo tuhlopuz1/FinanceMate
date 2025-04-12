@@ -16,7 +16,7 @@ def get_advice(name: str, amt: int):
         timeout=100,
     )
 
-    title = response.choices[0].message.content
-    print(title)
+    result = response.choices[0].message.content
+    print(result)
 
-    return {"title": title}
+    return {"result": result}
