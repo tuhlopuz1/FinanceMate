@@ -66,6 +66,14 @@ class DatabaseAdapter:
         #self.add_table_from_csv('task-files/all_user_balances.csv', 'all_user_balances')
         #self.add_table_from_csv('task-files/all_user_transactions.csv', 'all_user_transactions')
         self.add_table_from_csv('task-files/users_data.csv', 'users_data')
+
+        self.execute_with_request("""
+            CREATE TABLE IF NOT EXISTS email_users (
+                party_rk INT,
+                email VARCHAR(255),
+                password VARCHAR(255)
+        );
+        """)
         
     def add_table_from_csv(self, csv_file: str, table_name: str) -> None:
         """Загружает данные из CSV файла в указанную таблицу."""

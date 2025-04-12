@@ -29,7 +29,14 @@ const predefinedColors = [
 export default function Main() {
   const [expenses, setExpenses] = useState([]);
   const [filteredCategory, setFilteredCategory] = useState('');
-  const [startDate, setStartDate] = useState('');
+  const getDefaultStartDate = () => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - 1);
+    return date.toISOString().split('T')[0];
+  };
+  
+  const [startDate, setStartDate] = useState(getDefaultStartDate());
+  
   const [endDate, setEndDate] = useState('');
 
   // Загрузка данных с сервера
