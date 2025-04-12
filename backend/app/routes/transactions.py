@@ -64,25 +64,23 @@ def add_transaction(request: AddTransactionRequest):
 
 @transactions_route.post(path="/csv")
 async def add_transaction_csv(file: UploadFile = File(...)):
-    # Чтение содержимого файла
     contents = await file.read()
-    # Преобразование содержимого в строку
-    csv_string = contents.decode("Windows-1251")
-    
-    # Использование pandas для обработки CSV
+
+    try:
+        csv_string = contents.decode("utf-8")
+    except UnicodeDecodeError:
+        csv_string = contents.decode("Windows-1251", errors="replace")
+
     df = pd.read_csv(StringIO(csv_string), sep=';')
     
-    # Здесь вы можете добавить логику обработки данных
-    # Например, вернуть первые 5 строк
     print(df.head().to_dict(orient="records")[0])
     
     adapter = DatabaseAdapter()
     adapter.connect()
     adapter.insert('all_user_transactions', df.head().to_dict(orient="records")[0])
     
-    # adapter.insert('all_user_transactions',
-    #                df.head().to_dict())
     return {"status": "ok"}
+
 
 @transactions_route.post(path="/add-category")
 async def add_transaction_category(party_rk: int, category: str):
