@@ -182,7 +182,7 @@ def get_summary(party_rk: int):
         summaries.insert(0, notification)
     
     if not bad:
-        notification['text'] = 'Всеок'
+        notification['text'] = 'В вашем распоряжении финансами нет больших ошибок.'
         notification['date'] = formatted_date
         summaries.insert(0, notification)
 
