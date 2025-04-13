@@ -99,7 +99,7 @@ function LogIn() {
   return (
     <div className="container">
       <form className="register-form">
-        <h2>Log in to your account</h2>
+        <h2>Вход в аккаунт</h2>
         
         <div className="tabs">
           <button
@@ -107,21 +107,21 @@ function LogIn() {
             className={`tab ${activeTab === 'email' ? 'active' : ''}`}
             onClick={() => setActiveTab('email')}
           >
-            Email
+            По почте
           </button>
           <button
             type="button"
             className={`tab ${activeTab === 'party_rk' ? 'active' : ''}`}
             onClick={() => setActiveTab('party_rk')}
           >
-            By party_rk
+            По party_rk
           </button>
         </div>
 
         {activeTab === 'email' ? (
           <>
             <div className="input-group">
-              <label>Enter your email</label>
+              <label>Введите почту</label>
               <input 
                 type="email" 
                 value={email}
@@ -131,7 +131,7 @@ function LogIn() {
               />
             </div>
             <div className="input-group">
-              <label>Enter your password</label>
+              <label>Введите пароль</label>
               <input 
                 type="password" 
                 value={password}
@@ -143,7 +143,7 @@ function LogIn() {
           </>
         ) : (
           <div className="input-group">
-            <label>Enter your party_rk</label>
+            <label>Введите party_rk</label>
             <input 
               type="tel" 
               value={party_rk}
@@ -159,12 +159,12 @@ function LogIn() {
           id="submitButton" 
           onClick={handleSubmit}
         >
-          Log in
+          Вход
         </button>
         
         <p className="message">
-          Don't have an account? {' '}
-          <Link to="/sign-up" className='otherVariant'>Sign up</Link>
+          Ещё нет аккаунта? {' '}
+          <Link to="/sign-up" className='otherVariant'>Регистрация</Link>
         </p>
       </form>
     </div>

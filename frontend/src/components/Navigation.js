@@ -92,6 +92,9 @@ export default function Navigation() {
     <nav id="navP" className="flex items-center justify-between bg-gray-200 px-4 py-2 shadow-md">
       <div className="flex gap-2">
         <Link to="/main">
+          <span id="logo" className="text-2xl font-bold text-gray-800 cursor-pointer">FinanceMate</span>
+        </Link>
+        <Link to="/main">
           <button className="bg-white px-4 py-1 rounded shadow">Главная</button>
         </Link>
         <Link to="/add-transaction">
