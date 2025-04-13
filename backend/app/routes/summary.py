@@ -141,7 +141,7 @@ def get_summary(party_rk: int):
     else:
         summaries = json.loads(nots[0]['notifications'])
 
-    if len(adapter.get_by_value('all_user_transactions', 'party_rk', party_rk)) < 20:
+    if len(adapter.get_by_value('all_user_transactions', 'party_rk', party_rk)) <= 20:
         notification = dict()
         notification['date'] = formatted_date
         notification['text'] = '! Недостаточно транзакций, набертие не менее 20 покупок для отчёта.'
