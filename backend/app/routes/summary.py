@@ -116,7 +116,7 @@ categories_json = {
 with open('task-files/segmentation.json', mode='r', encoding='Windows-1251') as file:
     data_dict = json.load(file)
 
-@summary_route.get(path="/")
+@summary_route.post(path="/")
 def get_summary(party_rk: int):
     global categories_json
     adapter = DatabaseAdapter()
