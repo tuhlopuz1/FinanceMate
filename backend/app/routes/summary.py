@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from backend.adapters.db_source import DatabaseAdapter
 from datetime import date
@@ -90,6 +91,26 @@ summary_titles = {
     }
 }
 
+categories_json = {
+    "base": [
+        "0", "Дом и ремонт", "Мобильная связь", "Супермаркеты", "Аптеки",
+        "ЖКХ", "Транспорт", "Такси", "Рестораны", "Одежда и обувь",
+        "Медицина", "Топливо", "Авиабилеты", "Ж/д билеты", "Услуги банка",
+        "Электроника и техника", "Детские товары", "Связь", "Телевидение",
+        "Интернет", "Онлайн-кинотеатры", "Музыка", "Спорттовары",
+        "Фото и видео", "Каршеринг", "Аренда авто", "Экосистема Сбер",
+        "Экосистема Яндекс", "Комиссия", "Наличные", "Пополнения",
+        "Интернет-магазины", "Различные товары", "Косметика", "Цветы",
+        "Животные", "Другое"
+    ],
+    "credit": ["Кредиты", "Проценты", "Финансы"],
+    "additional": [
+        "Красота", "Азартные игры и лотереи", "Благотворительность",
+        "Развлечения", "Турагентства", "Путешествия", "Частные услуги",
+        "Бонусы", "Duty Free", "Эл. кошельки и переводы", "Переводы",
+        "Социальные сети", "Искусство", "Фастфуд"
+    ]
+}
 
 
 with open('task-files/segmentation.json', mode='r', encoding='Windows-1251') as file:
@@ -97,6 +118,7 @@ with open('task-files/segmentation.json', mode='r', encoding='Windows-1251') as 
 
 @summary_route.get(path="/")
 def get_summary(party_rk: int):
+    global categories_json
     adapter = DatabaseAdapter()
     adapter.connect()
     adapter.initialize_tables()
@@ -105,9 +127,9 @@ def get_summary(party_rk: int):
     salary_group = dict(adapter.get_by_value('users_data', 'party_rk', party_rk)[0])['salary_group']
     
     all_sum = sum([float(str(dict(i)['transaction_amt_rur']).replace(',', '.')) if str(dict(i)['transaction_type_cd']) == 'PUC' else 0 for i in adapter.get_by_value('all_user_transactions', 'party_rk', party_rk)])
-    credit_sum = sum([float(str(dict(i)['transaction_amt_rur']).replace(',', '.')) if str(dict(i)['sphere']) == 'credit' else 0 for i in adapter.get_by_value('all_user_transactions', 'party_rk', party_rk)])
-    base_sum = sum([float(str(dict(i)['transaction_amt_rur']).replace(',', '.')) if str(dict(i)['sphere']) == 'base' else 0 for i in adapter.get_by_value('all_user_transactions', 'party_rk', party_rk)])
-    additional_sum = sum([float(str(dict(i)['transaction_amt_rur']).replace(',', '.')) if str(dict(i)['sphere']) == 'credit' else 0 for i in adapter.get_by_value('all_user_transactions', 'party_rk', party_rk)])
+    credit_sum = sum([float(str(dict(i)['transaction_amt_rur']).replace(',', '.')) if str(dict(i)['loyalty_cashback_category_nm']) in categories_json['credit'] else 0 for i in adapter.get_by_value('all_user_transactions', 'party_rk', party_rk)])
+    base_sum = sum([float(str(dict(i)['transaction_amt_rur']).replace(',', '.')) if str(dict(i)['loyalty_cashback_category_nm']) in categories_json['base'] else 0 for i in adapter.get_by_value('all_user_transactions', 'party_rk', party_rk)])
+    additional_sum = sum([float(str(dict(i)['transaction_amt_rur']).replace(',', '.')) if str(dict(i)['loyalty_cashback_category_nm']) in categories_json['additional'] else 0 for i in adapter.get_by_value('all_user_transactions', 'party_rk', party_rk)])
     credit_part = credit_sum / all_sum
     base_part = base_sum / all_sum
     additional_part  = additional_sum / all_sum
@@ -115,37 +137,48 @@ def get_summary(party_rk: int):
     print(credit_part, base_part, additional_part, 1111, data_dict['age'][age_group]['credit_max'], data_dict['age'][age_group]['credit_min'])
     summaries = []
     
-    if credit_part > data_dict['age'][age_group]['credit_max'] or credit_part < data_dict['age'][age_group]['credit_min']:
+    today = datetime.now()
+    formatted_date = today.strftime("%Y-%m-%d")
+    
+    if credit_part > data_dict['age'][age_group]['credit_max']:
         notification = dict()
         notification['id'] = 1
-        notification['date'] = date.today
+        notification['date'] = formatted_date
         notification['title'] = summary_titles['age'][age_group]['credit']
-        summaries.append(dict())
+        summaries.append(notification)
+    if base_part > data_dict['age'][age_group]['base_max']:
+        notification = dict()
+        notification['id'] = 1
+        notification['date'] = formatted_date
+        notification['title'] = summary_titles['age'][age_group]['base']
+        summaries.append(notification)
+    if credit_part > data_dict['age'][age_group]['additional_max']:
+        notification = dict()
+        notification['id'] = 1
+        notification['date'] = formatted_date
+        notification['title'] = summary_titles['age'][age_group]['additional']
+        summaries.append(notification)
+    if credit_part > data_dict['monthly_income_amt'][salary_group]['credit_max']:
+        notification = dict()
+        notification['id'] = 1
+        notification['date'] = formatted_date
+        notification['title'] = summary_titles['salary'][salary_group]['credit']
+        summaries.append(notification)
+    if base_part > data_dict['monthly_income_amt'][salary_group]['base_max']:
+        notification = dict()
+        notification['id'] = 1
+        notification['date'] = formatted_date
+        notification['title'] = summary_titles['salary'][salary_group]['base']
+        summaries.append(notification)
+    if credit_part > data_dict['monthly_income_amt'][salary_group]['additional_max']:
+        notification = dict()
+        notification['id'] = 1
+        notification['date'] = formatted_date
+        notification['title'] = summary_titles['salary'][salary_group]['additional']
+        summaries.append(notification)
         
     dict_to_db = {'party_rk': party_rk, 'notifications': summaries}
     
     print(all_sum)
     print(222222, date.today)
-    
-    # credit_sum = adapter.get_by_value('all_user_transactions', 'party_rk', party_rk)
-    # credit_dict = dict()
-    # credit_dict['date'] = date.today
-    # credit_dict['title'] = ''
-    # summaries.append(credit_dict)
-    # #print(credit_sum)
-    
-    # base_sum = adapter.get_by_value('all_user_transactions', 'party_rk', party_rk)
-    # base_dict = dict()
-    # base_dict['date'] = date.today
-    # base_dict['title'] = ''
-    # summaries.append(base_dict)
-    # #print(base_dict)
-    
-    # additional_sum = adapter.get_by_value('all_user_transactions', 'party_rk', party_rk)
-    # additional_dict = dict()
-    # additional_dict['date'] = date.today
-    # additional_dict['title'] = ''
-    # summaries.append(additional_dict)
-    # #print(additional_dict)
-
     return dict_to_db
