@@ -82,6 +82,14 @@ class DatabaseAdapter:
                 categories TEXT[]
         );
         """)
+
+        self.execute_with_request("""
+            CREATE TABLE IF NOT EXISTS notifications (
+                party_rk INT,
+                notifications VARCHAR(10000)
+        );
+        """)
+
         cursor = self.connection.cursor()
         # 1. Добавление нового столбца 'sphere'
 

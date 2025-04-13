@@ -6,22 +6,15 @@ import './components/Styles.css';
 
 const messages = [
   {
-    id: 1,
-    text: 'Вы превысили нормальные расходы на супермаркеты в этом месяце',
-    date: '2025-04-08T12:34:56',
+    text: 'Вы превысили нормальные расходы на супермаркеты в этом месяце 1',
+    date: '2025-04-03',
   },
+  {
+    text: 'Вы превысили нормальные расходы на супермаркеты в этом месяце 2 ',
+    date: '2025-04-03',
+  }
 ];
 
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('ru-RU', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-}
 
 export default function FinanceHelper() {
   const handleAdviceClick = async () => {
@@ -125,16 +118,21 @@ export default function FinanceHelper() {
         </div>
 
         <div className="helper-container">
-          <h2 id="finHead">Уведомления от финансового помощника</h2>
-          <div className="messages">
-            {messages.map((msg) => (
-              <div className="message" key={msg.id}>
+        <h2 id="finHead">Уведомления от финансового помощника</h2>
+        <div className="messages">
+          {messages.length === 0 ? (
+            <div className="message">Нет новых уведомлений</div>
+          ) : (
+            messages.map((msg, index) => (
+              <div className="message" key={index}>
                 <div className="message-text">{msg.text}</div>
-                <div className="message-date">{formatDate(msg.date)}</div>
+                <div className="message-date">{msg.date}</div>
               </div>
-            ))}
-          </div>
+            ))
+          )}
         </div>
+      </div>
+
       </div>
     </div>
   );
