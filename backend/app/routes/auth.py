@@ -6,7 +6,7 @@ from backend.models.transactions.modules import SignUp
 from backend.adapters.db_source import DatabaseAdapter
 import random
 import bcrypt
-import datetime
+from datetime import datetime
 
 auth_route = APIRouter(prefix="/auth", tags=["auth"])
 
