@@ -1,22 +1,32 @@
-// financeHelper.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Navigation from './components/Navigation';
 import Swal from 'sweetalert2';
 import './components/Styles.css';
-
-const messages = [
-  {
-    text: 'Вы превысили нормальные расходы на супермаркеты в этом месяце 1',
-    date: '2025-04-03',
-  },
-  {
-    text: 'Вы превысили нормальные расходы на супермаркеты в этом месяце 2 ',
-    date: '2025-04-03',
-  }
-];
-
-
+import { marked } from 'marked'; 
 export default function FinanceHelper() {
+  const [messages, setMessages] = useState([]);
+
+  // Загрузка уведомлений при монтировании
+  useEffect(() => {
+    const loadMessages = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/notifications/get-notifications?party_rk=${localStorage.getItem('party_rk')}`);
+        const data = await response.json();
+
+        if (Array.isArray(data)) {
+          setMessages(data);
+        } else {
+          console.error('Неверный формат данных от сервера:', data);
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке уведомлений:', error);
+      }
+    };
+
+    loadMessages();
+  }, []);
+
+
   const handleAdviceClick = async () => {
     const { value: formValues } = await Swal.fire({
       title: 'Совет по будущей покупке',
@@ -42,7 +52,6 @@ export default function FinanceHelper() {
     });
   
     if (formValues) {
-      // Показываем модалку с колесом загрузки
       Swal.fire({
         title: 'Анализируем...',
         html: '<div class="swal2-loading" style="font-size: 18px;">Пожалуйста, подождите</div>',
@@ -60,10 +69,12 @@ export default function FinanceHelper() {
         );
         const data = await response.json();
   
-        // Обновляем текущее модальное окно с результатом
+        const markdownResult = data.result || 'Не удалось получить совет.';
+        const htmlResult = marked.parse(markdownResult); // 👈 парсим Markdown в HTML
+  
         Swal.update({
           title: 'Совет',
-          html: `<div style="font-size: 16px;">${data.result || 'Не удалось получить совет.'}</div>`,
+          html: `<div style="font-size: 16px;">${htmlResult}</div>`, // 👈 вставляем HTML
           icon: 'info',
           showConfirmButton: true,
           confirmButtonText: 'ОК',

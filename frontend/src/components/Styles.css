@@ -282,3 +282,29 @@ nav {
 .filter-container {
   margin-top: 7vh;
 }
+
+#navP {
+  height: 5vh;
+}
+
+#userBtn {
+  position: absolute;
+  top: 2vh;
+  right: 3%;
+}
+
+#dropMenu {
+  position: absolute;
+  top: 7vh;
+  right: 5%;
+  background-color: #444;
+  border: none;
+  padding: 0.1%;
+  border-radius: 0.5rem;
+}
+
+#logoutBtn,
+#profBtn {
+  margin: 3px;
+  background-color: #333;
+}
