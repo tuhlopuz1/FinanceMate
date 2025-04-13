@@ -119,6 +119,7 @@ with open('task-files/segmentation.json', mode='r', encoding='Windows-1251') as 
 @summary_route.get(path="")
 def get_summary(party_rk: int):
     global categories_json
+    global formatted_date
     adapter = DatabaseAdapter()
     adapter.connect()
     adapter.initialize_tables()
@@ -133,6 +134,7 @@ def get_summary(party_rk: int):
     credit_part = credit_sum / all_sum
     base_part = base_sum / all_sum
     additional_part  = additional_sum / all_sum
+    formatted_date = datetime.now().strftime("%Y-%m-%d")
     
     print(credit_part, base_part, additional_part, 1111, data_dict['age'][age_group]['credit_max'], data_dict['age'][age_group]['credit_min'])
     nots = adapter.get_by_value('notifications', 'party_rk', party_rk)
@@ -152,7 +154,6 @@ def get_summary(party_rk: int):
     bad = False
 
     today = datetime.now()
-    formatted_date = today.strftime("%Y-%m-%d")
     
     if credit_part > data_dict['age'][age_group]['credit_max']:
         notification = dict()
@@ -192,6 +193,7 @@ def get_summary(party_rk: int):
         summaries.insert(0, notification)
     
     if not bad:
+        notification = dict()
         notification['text'] = '! Транзакции в норме, в распоряжении финансами нет отходов от корректных чисел'
         notification['date'] = formatted_date
         summaries.insert(0, notification)
