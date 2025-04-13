@@ -192,6 +192,7 @@ def get_summary(party_rk: int):
         summaries.insert(0, notification)
     
     if not bad:
+        notification = dict()
         notification['text'] = '! Транзакции в норме, в распоряжении финансами нет отходов от корректных чисел'
         notification['date'] = formatted_date
         summaries.insert(0, notification)

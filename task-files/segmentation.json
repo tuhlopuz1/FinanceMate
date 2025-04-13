@@ -2,55 +2,55 @@
     "monthly_income_amt": 
     {
         "1": {
-            "credit_min": 5,
-            "credit_max": 10,
-            "base_min": 50,
-            "base_max": 60,
-            "additional_min": 20,
-            "additional_max": 30
+            "credit_min": 0.0024,
+            "credit_max": 0.0353,
+            "base_min": 0.5574,
+            "base_max": 0.7764,
+            "additional_min": 0.0112,
+            "additional_max": 0.0509
         },
         "2": {
-            "credit_min": 5,
-            "credit_max": 10,
-            "base_min": 50,
-            "base_max": 60,
-            "additional_min": 20,
-            "additional_max": 30
+            "credit_min": 0.0023,
+            "credit_max": 0.0430,
+            "base_min": 0.6324,
+            "base_max": 0.6574,
+            "additional_min": 0.0567,
+            "additional_max": 0.0943
         },
         "3": {
-            "credit_min": 5,
-            "credit_max": 10,
-            "base_min": 50,
-            "base_max": 60,
-            "additional_min": 20,
-            "additional_max": 30
+            "credit_min": 0.0043,
+            "credit_max": 0.0459,
+            "base_min": 0.0589,
+            "base_max": 0.6452,
+            "additional_min": 0.0654,
+            "additional_max": 0.1003
         }
     },
     "age": 
     {
         "1": {
-            "credit_min": 0,
-            "credit_max": 0,
-            "base_min": 50,
-            "base_max": 60,
-            "additional_min": 20,
-            "additional_max": 30
+            "credit_min": 0.0006,
+            "credit_max": 0.0423,
+            "base_min": 0.5451,
+            "base_max": 0.7061,
+            "additional_min": 0.0108,
+            "additional_max": 0.0863
         },
         "2": {
-            "credit_min": 0,
-            "credit_max": 0,
-            "base_min": 50,
-            "base_max": 60,
-            "additional_min": 20,
-            "additional_max": 30
+            "credit_min": 0.0009,
+            "credit_max": 0.0418,
+            "base_min": 0.5033,
+            "base_max": 0.8837,
+            "additional_min": 0.0174,
+            "additional_max": 0.0644
         },
         "3": {
-            "credit_min": 0,
-            "credit_max": 0,
-            "base_min": 50,
-            "base_max": 60,
-            "additional_min": 20,
-            "additional_max": 30
+            "credit_min": 0.0051,
+            "credit_max": 0.0358,
+            "base_min": 0.4213,
+            "base_max": 0.7230,
+            "additional_min": 0.078,
+            "additional_max": 0.0564
         }
     }
 }
