@@ -162,7 +162,6 @@ class DatabaseAdapter:
         self.create_table_if_not_exists(table_name)
         
         data = self.execute_with_request(f'SELECT * FROM {table_name} LIMIT 12')
-        print(111111111111, data)
         if data != []:
             return
         try:
