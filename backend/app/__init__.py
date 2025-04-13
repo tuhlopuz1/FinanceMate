@@ -4,8 +4,10 @@ from backend.app.routes.auth import auth_route
 from backend.app.routes.ai import ai_route
 from backend.app.routes.notifications import notifications_route
 
+from backend.app.routes.summary import summary_route
 
 app.include_router(transactions_route)
 app.include_router(auth_route)
 app.include_router(ai_route)
 app.include_router(notifications_route)
+app.include_router(summary_route)
