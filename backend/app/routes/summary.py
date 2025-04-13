@@ -122,7 +122,11 @@ def get_summary(party_rk: int):
         notification['title'] = summary_titles['age'][age_group]['credit']
         summaries.append(dict())
         
-    dict_to_db = {'party_rk': party_rk, 'notifications': summaries}
+    dict_to_db = {'party_rk': party_rk, 'notifications': str(summaries)}
+
+    adapter.delete_by_value('notifications', 'party_rk', party_rk)
+
+    adapter.insert('notifications', dict_to_db)
     
     print(all_sum)
     print(222222, date.today)
