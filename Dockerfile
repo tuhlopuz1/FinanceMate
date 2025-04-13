@@ -1,9 +1,13 @@
 FROM python:3.12-alpine3.21
 
-COPY ./requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем файлы проекта в контейнер
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD [ "python", "./app.py" ]
+# Команда для запуска вашего приложения
+CMD ["python", "main.py"]

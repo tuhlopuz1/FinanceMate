@@ -1,54 +1,36 @@
-version: '3'
+version: '3.8'
 
 services:
-  postgresql:
-    image: postgres:13
-    container_name: pgsql
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
-      - ${DB_PORT}:${DB_PORT}
+      - "8000:8000"
     environment:
-      POSTGRES_DB: ${DB_HOST}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-    command: -p ${DB_PORT}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_PASSWORD=1234
+    depends_on:
+      - postgres
+
+  frontend:
+    image: node:18
+    working_dir: /app
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
-
-  app_api:
-    image: backend:master
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: backend_container
-    environment:
-      FAST_API_HOST: ${FAST_API_HOST}
-      FAST_API_PORT: ${FAST_API_PORT}
-      DBNAME: ${DBNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: ${DB_HOST}
-      DB_PORT: ${DB_PORT}
-
-
+      - ./frontend:/app
     ports:
-      - ${FAST_API_PORT}:${FAST_API_PORT}
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    restart: unless-stopped
+      - "3000:3000"
+    command: npm start
+    depends_on:
+      - backend
 
-  app_frontend:
-    image: frontend:master
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: frontend_container
+
+  postgres:
+    image: postgres:latest
     environment:
-      BACKEND_HOST: ${BACKEND_HOST}
-      BACKEND_PORT: ${FAST_API_PORT}
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 1234
     ports:
-      - 3000:3000
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    restart: unless-stopped
-
-volumes:
-  postgres_data:
+      - "5432:5432"
