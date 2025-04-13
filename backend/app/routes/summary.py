@@ -135,7 +135,11 @@ def get_summary(party_rk: int):
     additional_part  = additional_sum / all_sum
     
     print(credit_part, base_part, additional_part, 1111, data_dict['age'][age_group]['credit_max'], data_dict['age'][age_group]['credit_min'])
-    summaries = json.loads(adapter.get_by_value('notifications', 'party_rk', party_rk)[0]['notifications'])
+    nots = adapter.get_by_value('notifications', 'party_rk', party_rk)
+    if len(nots) == 0:
+        summaries = []
+    else:
+        summaries = json.loads(nots[0]['notifications'])
 
 
     
