@@ -80,6 +80,14 @@ class DatabaseAdapter:
                 categories TEXT[]
         );
         """)
+
+        self.execute_with_request("""
+            CREATE TABLE IF NOT EXISTS notifications (
+                party_rk INT,
+                notifications VARCHAR(10000)
+        );
+        """)
+
         
     def add_table_from_csv(self, csv_file: str, table_name: str) -> None:
         """Загружает данные из CSV файла в указанную таблицу."""

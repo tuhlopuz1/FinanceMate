@@ -6,7 +6,7 @@ from backend.models.transactions.modules import SignUp
 from backend.adapters.db_source import DatabaseAdapter
 import random
 import bcrypt
-
+import datetime
 
 auth_route = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -31,6 +31,11 @@ def sign_up(body: SignUp):
     adapter.add_large_csv_with_chunks('task-files/all_user_transactions.csv', 'all_user_transactions')
 
 
+    today = datetime.now()
+
+
+    formatted_date = today.strftime("%Y-%m-%d")
+
     user_check = adapter.get_by_value('email_users', 'email', body.email)
 
     if len(user_check) != 0:
@@ -50,7 +55,8 @@ def sign_up(body: SignUp):
         'party_rk': new_party_rk,
         'gender_cd': body.gender,
         'age': body.age,
-        'monthly_income_amt': body.salary
+        'monthly_income_amt': body.salary,
+        'first_bank_product_date': formatted_date
     }
 
     adapter.insert('email_users', new_user1)
