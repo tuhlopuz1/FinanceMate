@@ -137,6 +137,12 @@ def get_summary(party_rk: int):
     print(credit_part, base_part, additional_part, 1111, data_dict['age'][age_group]['credit_max'], data_dict['age'][age_group]['credit_min'])
     summaries = json.loads(adapter.get_by_value('notifications', 'party_rk', party_rk)[0]['notifications'])
 
+    if len(adapter.get_by_value('all_user_transactions', 'party_rk', party_rk)) < 20:
+        notification = dict()
+        notification['date'] = formatted_date
+        notification['text'] = '! Недостаточно транзакций, набертие не менее 20 покупок для отчёта.'
+        summaries.insert(0, notification)
+        return {'party_rk': party_rk, 'notifications': str(summaries).replace("'",'"')}
 
     
     bad = False
@@ -182,7 +188,7 @@ def get_summary(party_rk: int):
         summaries.insert(0, notification)
     
     if not bad:
-        notification['text'] = 'В вашем распоряжении финансами нет больших ошибок.'
+        notification['text'] = '! Транзакции в норме, в распоряжении финансами нет отходов от корректных чисел'
         notification['date'] = formatted_date
         summaries.insert(0, notification)
 
