@@ -96,6 +96,7 @@ class DatabaseAdapter:
         if self.column_exists('all_user_transactions', 'sphere'):
                 return
             
+        print('creating sphere!!!!!!!!!!!!!!!!!!!!!!!!')
         cursor.execute('ALTER TABLE all_user_transactions ADD COLUMN sphere VARCHAR')
         # 2. Определение категорий и соответствующих сфер
         category_to_sphere = {
@@ -156,11 +157,11 @@ class DatabaseAdapter:
 
         # 3. Обновление столбца 'sphere' на основе 'loyalty_cashback_category_nm'
         for category, sphere in category_to_sphere.items():
-            cursor.execute('''
+            cursor.execute("""
                 UPDATE all_user_transactions
                 SET sphere = %s
-                WHERE loyalty_cashback_category_nm = %s
-            ''', (sphere, category))
+                WHERE loyalty_cashback_category_nm = %s AND transaction_type_cd = 'PUC'
+            """, (sphere, category))
 
         # Сохранение изменений и закрытие соединения
         self.connection.commit()

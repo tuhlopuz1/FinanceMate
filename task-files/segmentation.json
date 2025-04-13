@@ -29,24 +29,24 @@
     "age": 
     {
         "1": {
-            "credit_min": 5,
-            "credit_max": 10,
+            "credit_min": 0,
+            "credit_max": 0,
             "base_min": 50,
             "base_max": 60,
             "additional_min": 20,
             "additional_max": 30
         },
         "2": {
-            "credit_min": 5,
-            "credit_max": 10,
+            "credit_min": 0,
+            "credit_max": 0,
             "base_min": 50,
             "base_max": 60,
             "additional_min": 20,
             "additional_max": 30
         },
         "3": {
-            "credit_min": 5,
-            "credit_max": 10,
+            "credit_min": 0,
+            "credit_max": 0,
             "base_min": 50,
             "base_max": 60,
             "additional_min": 20,
