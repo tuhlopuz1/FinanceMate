@@ -9,7 +9,7 @@ body {
 
 /* Навигация */
 nav {
-  background-color: #555;
+  background-color: #1a1a1a;
   padding: 12px 20px;
   display: flex;
   justify-content: space-between;
@@ -58,7 +58,7 @@ nav button:hover {
   box-sizing: border-box;
   overflow-y: auto;
   max-height: 100vh;
-  background-color: #555;
+  background-color: #1a1a1a;
   border-left: 1px solid #222;
   scrollbar-width: none; /* Firefox */
 }
@@ -180,7 +180,7 @@ button.submit:hover {
 
 /* Кнопки и блоки */
 #addTr {
-  background-color: #555;
+  background-color: #1a1a1a;
   border-radius: 1rem;
   padding: 3%;
 }
@@ -307,4 +307,12 @@ nav {
 #profBtn {
   margin: 3px;
   background-color: #333;
+}
+
+#logo {
+  color: white;
+  margin: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 20px;
 }
