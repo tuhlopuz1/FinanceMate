@@ -95,15 +95,38 @@ export default function FinanceHelper() {
   };
   
 
-  const handleMonthlyAnalysis = () => {
+  const handleMonthlyAnalysis = async () => {
+    const party_rk = localStorage.getItem('party_rk');
+  
     Swal.fire({
-      title: 'Анализ предыдущего месяца',
-      text: 'Эта функция пока в разработке 😊',
+      title: 'Отправка запроса...',
+      html: `
+        <table style="width: 100%; text-align: left; font-size: 16px;">
+          <tr><td>📤</td><td>Отправлен запрос на анализ</td></tr>
+          <tr><td>⏳</td><td>Скоро в ваших уведомлениях появится отчёт</td></tr>
+        </table>
+      `,
       icon: 'info',
       background: '#333',
       color: '#fff',
+      confirmButtonText: 'ОК'
     });
+  
+    try {
+      await fetch(`http://localhost:8000/summary?party_rk=${encodeURIComponent(party_rk)}`);
+      // можно добавить лог или ещё одну Swal при успехе, но выше уже есть инфо
+    } catch (error) {
+      console.error('Ошибка при отправке запроса на анализ:', error);
+      Swal.fire({
+        title: 'Ошибка',
+        text: 'Не удалось отправить запрос. Попробуйте позже.',
+        icon: 'error',
+        background: '#333',
+        color: '#fff',
+      });
+    }
   };
+  
 
   return (
     <div>

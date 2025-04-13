@@ -1,0 +1,11 @@
+g4f==0.4.7.6
+numpy==2.2.4
+pandas==2.2.3
+psycopg2-binary==2.9.10
+pydantic==2.11.3
+bcrypt==4.3.0
+scipy==1.15.2
+uvicorn==0.34.0
+python-dotenv==1.0.1
+python-multipart==0.0.20
+fastapi

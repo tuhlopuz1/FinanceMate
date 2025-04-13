@@ -116,7 +116,7 @@ categories_json = {
 with open('task-files/segmentation.json', mode='r', encoding='Windows-1251') as file:
     data_dict = json.load(file)
 
-@summary_route.post(path="/")
+@summary_route.get(path="")
 def get_summary(party_rk: int):
     global categories_json
     adapter = DatabaseAdapter()
@@ -135,54 +135,66 @@ def get_summary(party_rk: int):
     additional_part  = additional_sum / all_sum
     
     print(credit_part, base_part, additional_part, 1111, data_dict['age'][age_group]['credit_max'], data_dict['age'][age_group]['credit_min'])
-    summaries = []
+    summaries = json.loads(adapter.get_by_value('notifications', 'party_rk', party_rk)[0]['notifications'])
+
+
     
+    bad = False
+
     today = datetime.now()
     formatted_date = today.strftime("%Y-%m-%d")
     
     if credit_part > data_dict['age'][age_group]['credit_max']:
         notification = dict()
-        notification['id'] = 1
         notification['date'] = formatted_date
-        notification['title'] = summary_titles['age'][age_group]['credit']
-        summaries.append(notification)
+        notification['text'] = summary_titles['age'][age_group]['credit']
+        bad = True
+        summaries.insert(0, notification)
     if base_part > data_dict['age'][age_group]['base_max']:
         notification = dict()
-        notification['id'] = 1
         notification['date'] = formatted_date
-        notification['title'] = summary_titles['age'][age_group]['base']
-        summaries.append(notification)
+        notification['text'] = summary_titles['age'][age_group]['base']
+        bad = True
+        summaries.insert(0, notification)
     if credit_part > data_dict['age'][age_group]['additional_max']:
         notification = dict()
-        notification['id'] = 1
         notification['date'] = formatted_date
-        notification['title'] = summary_titles['age'][age_group]['additional']
-        summaries.append(notification)
+        notification['text'] = summary_titles['age'][age_group]['additional']
+        bad = True
+        summaries.insert(0, notification)
     if credit_part > data_dict['monthly_income_amt'][salary_group]['credit_max']:
         notification = dict()
-        notification['id'] = 1
         notification['date'] = formatted_date
-        notification['title'] = summary_titles['salary'][salary_group]['credit']
-        summaries.append(notification)
+        bad = True
+        notification['text'] = summary_titles['salary'][salary_group]['credit']
+        summaries.insert(0, notification)
     if base_part > data_dict['monthly_income_amt'][salary_group]['base_max']:
         notification = dict()
-        notification['id'] = 1
         notification['date'] = formatted_date
-        notification['title'] = summary_titles['salary'][salary_group]['base']
-        summaries.append(notification)
+        notification['text'] = summary_titles['salary'][salary_group]['base']
+        bad = True
+        summaries.insert(0, notification)
     if credit_part > data_dict['monthly_income_amt'][salary_group]['additional_max']:
         notification = dict()
-        notification['id'] = 1
         notification['date'] = formatted_date
-        notification['title'] = summary_titles['salary'][salary_group]['additional']
-        summaries.append(notification)
-        
-    dict_to_db = {'party_rk': party_rk, 'notifications': str(summaries)}
+        notification['text'] = summary_titles['salary'][salary_group]['additional']
+        bad = True
+        summaries.insert(0, notification)
+    
+    if not bad:
+        notification['text'] = 'В вашем распоряжении финансами нет больших ошибок.'
+        notification['date'] = formatted_date
+        summaries.insert(0, notification)
+
+
+    print('AAAAAAAAAAAAAAAAAAA', summaries)
+
+    dict_to_db = {'party_rk': party_rk, 'notifications': str(summaries).replace("'",'"')}
 
     adapter.delete_by_value('notifications', 'party_rk', party_rk)
 
     adapter.insert('notifications', dict_to_db)
-    
+    print()
     print(all_sum)
     print(222222, date.today)
     return dict_to_db
