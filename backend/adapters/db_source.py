@@ -49,7 +49,9 @@ class DatabaseAdapter:
             brand_nm VARCHAR(200),
             loyalty_cashback_category_nm VARCHAR(100),
             loyalty_accrual_rub_amt VARCHAR(100),
-            utilization_flg INT
+            utilization_flg INT,
+            age_group TEXT,
+            salary_group TEXT
         );
         """
         try:
@@ -82,8 +84,11 @@ class DatabaseAdapter:
         """)
         cursor = self.connection.cursor()
         # 1. Добавление нового столбца 'sphere'
-        #cursor.execute('ALTER TABLE all_user_transactions ADD COLUMN sphere VARCHAR')
 
+        if self.column_exists('all_user_transactions', 'sphere'):
+                return
+            
+        cursor.execute('ALTER TABLE all_user_transactions ADD COLUMN sphere VARCHAR')
         # 2. Определение категорий и соответствующих сфер
         category_to_sphere = {
             "Кредиты": "credit",
@@ -105,7 +110,7 @@ class DatabaseAdapter:
             "Услуги банка": "base",
             "Электроника и техника": "base",
             "Детские товары": "base",
-            "Красота": "base",
+            "Красота": "additional",
             "Связь": "base",
             "Телевидение": "base",
             "Интернет": "base",
@@ -161,7 +166,7 @@ class DatabaseAdapter:
         if data != []:
             return
         try:
-            with open(csv_file, mode='r', encoding='utf-8') as file:
+            with open(csv_file, mode='r', encoding='Windows-1251', errors='replace') as file:
                 reader = csv.reader(file, delimiter=';')  # Указываем разделитель как точка с запятой
                 headers = next(reader)  # Читаем заголовки из первой строки
 
@@ -179,64 +184,88 @@ class DatabaseAdapter:
                     self.connection.commit()  # Подтверждаем изменения
                     print(f"Данные из {csv_file} успешно загружены в таблицу {table_name}.")
             # 1. Добавление нового столбца 'sphere'
-            #cursor.execute('ALTER TABLE all_user_transactions ADD COLUMN sphere VARCHAR')
 
+            if self.column_exists('all_user_transactions', 'sphere'):
+                return
+            cursor.execute('ALTER TABLE all_user_transactions ADD COLUMN sphere VARCHAR')
             # 2. Определение категорий и соответствующих сфер
             category_to_sphere = {
-                "Кредиты": "credit",
-                "Проценты": "credit",
-                "Финансы": "credit",
-                "Дом и ремонт": "base",
-                "Мобильная связь": "base",
-                "Супермаркеты": "base",
+                "0": "base",
+                "Duty Free": "additional",
+                "Авиабилеты": "additional",
+                "Автоуслуги": "base",
+                "Азартные игры и лотереи": "additional",
                 "Аптеки": "base",
-                "ЖКХ": "base",
-                "Транспорт": "base",
-                "Такси": "base",
-                "Рестораны": "base",
-                "Одежда и обувь": "base",
-                "Медицина": "base",
-                "Топливо": "base",
-                "Авиабилеты": "base",
-                "Ж/д билеты": "base",
-                "Услуги банка": "base",
-                "Электроника и техника": "base",
-                "Детские товары": "base",
-                "Красота": "base",
-                "Связь": "base",
-                "Телевидение": "base",
-                "Интернет": "base",
-                "Онлайн-кинотеатры": "base",
-                "Музыка": "base",
-                "Спорттовары": "base",
-                "Фото и видео": "base",
-                "Каршеринг": "base",
                 "Аренда авто": "base",
+                "Благотворительность": "additional",
+                "Бонусы": "additional",
+                "Госуслуги": "base",
+                "Детские товары": "base",
+                "Дивиденды": "additional",
+                "Дом и ремонт": "base",
+                "Другое": "base",
+                "Ж/д билеты": "additional",
+                "Животные": "base",
+                "ЖКХ": "base",
+                "Зарплата": "base",
+                "Зарядка электромобилей": "base",
+                "Интернет": "base",
+                "Интернет-магазины": "base",
+                "Искусство": "additional",
+                "Канцтовары": "base",
+                "Каршеринг": "base",
+                "Кино": "additional",
+                "Книги": "additional",
+                "Комиссия": "base",
+                "Косметика": "base",
+                "Красота": "additional",
+                "Кредиты": "credit",
+                "Маркетплейсы": "base",
+                "Медицина": "base",
+                "Местный транспорт": "base",
+                "Металлы": "additional",
+                "Мобильная связь": "base",
+                "Музыка": "additional",
+                "Наличные": "base",
+                "НКО": "additional",
+                "Образование": "base",
+                "Одежда и обувь": "base",
+                "Онлайн-кинотеатры": "additional",
+                "Отели": "additional",
+                "Переводы": "additional",
+                "Платные дороги": "base",
+                "Пополнения": "base",
+                "Проценты": "credit",
+                "Развлечения": "additional",
+                "Различные товары": "base",
+                "Рестораны": "base",
+                "Связь": "base",
+                "Сервис": "base",
+                "Сетевой маркетинг": "additional",
+                "Соцвыплаты и пенсии": "base",
+                "Социальные сети": "additional",
+                "Спорттовары": "base",
+                "Сувениры": "additional",
+                "Супермаркеты": "base",
+                "Такси": "base",
+                "Телевидение": "base",
+                "Телефония": "base",
+                "Топливо": "base",
+                "Транспорт": "base",
+                "Турагентства": "additional",
+                "Услуги банка": "base",
+                "Фастфуд": "additional",
+                "Финансы": "credit",
+                "Фото и видео": "additional",
+                "Цветы": "additional",
+                "Цифровые товары": "additional",
+                "Частные услуги": "additional",
                 "Экосистема Сбер": "base",
                 "Экосистема Яндекс": "base",
-                "Комиссия": "base",
-                "Наличные": "base",
-                "Пополнения": "base",
-                "Интернет-магазины": "base",
-                "Различные товары": "base",
-                "Косметика": "base",
-                "Цветы": "base",
-                "Животные": "base",
-                "Другое": "base",
-                "Азартные игры и лотереи": "additional",
-                "Благотворительность": "additional",
-                "Развлечения": "additional",
-                "Турагентства": "additional",
-                "Путешествия": "additional",
-                "Частные услуги": "additional",
-                "Бонусы": "additional",
-                "Duty Free": "additional",
                 "Эл. кошельки и переводы": "additional",
-                "Переводы": "additional",
-                "Социальные сети": "additional",
-                "Искусство": "additional",
-                "Фастфуд": "additional"
+                "Электроника и техника": "base"
             }
+
 
             # 3. Обновление столбца 'sphere' на основе 'loyalty_cashback_category_nm'
             for category, sphere in category_to_sphere.items():
@@ -378,3 +407,14 @@ class DatabaseAdapter:
         except Exception as e:
             print(f"Ошибка при загрузке чанков из CSV: {e}")
             self.connection.rollback()
+
+    def column_exists(self, table_name, column_name):
+        cursor = self.connection.cursor()
+        cursor.execute(f"""
+            SELECT EXISTS (
+                SELECT 1 
+                FROM information_schema.columns 
+                WHERE table_name = %s AND column_name = %s
+            )
+        """, (table_name, column_name))
+        return cursor.fetchone()[0]

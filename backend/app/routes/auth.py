@@ -16,7 +16,13 @@ def log_in_by_party_rk(party_rk: int):
     adapter.connect()
     adapter.initialize_tables()
     
-    user = adapter.get_by_value('users_data', 'party_rk', party_rk)
+    user = dict(adapter.get_by_value('users_data', 'party_rk', party_rk)[0])
+    # распределение по группам
+    user_update = {
+        'age_group': '1' if user['age'] < 27 else '2' if user['age'] < 44 else '3',
+        'salary_group': '1' if user['monthly_income_amt'] < 509 and user['monthly_income_amt'] != 0 else '2' if user['monthly_income_amt'] < 1388 or user['monthly_income_amt'] == 0 else '3'
+    }
+    adapter.update_by_value('users_data', user_update, 'party_rk', party_rk)
 
     if len(user) == 0:
         raise HTTPException(status_code=401, detail='No user with this party_rk')
@@ -50,7 +56,9 @@ def sign_up(body: SignUp):
         'party_rk': new_party_rk,
         'gender_cd': body.gender,
         'age': body.age,
-        'monthly_income_amt': body.salary
+        'monthly_income_amt': body.salary,
+        'age_group': '1' if body.age < 27 else '2' if body.age < 44 else '3',
+        'salary_group': '1' if body.salary < 509 else '2' if body.salary < 1388 else '3'
     }
 
     adapter.insert('email_users', new_user1)
